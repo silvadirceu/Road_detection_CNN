@@ -1,0 +1,7 @@
+matplotlib
+tensorflow
+scikit-learn
+scikit-image
+keras
+gradio
+python-dotenv
