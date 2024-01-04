@@ -6,6 +6,5 @@ keras==2.15.0
 python-dotenv==1.0.0
 fastapi
 uvicorn[standard]
-msgpack
-msgpack_numpy
 opencv-python
+rich==13.7.0

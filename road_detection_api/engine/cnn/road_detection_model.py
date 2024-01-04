@@ -1,8 +1,6 @@
 import os
 from dotenv import load_dotenv
 import numpy as np
-from skimage.transform import resize
-from skimage.io import imread
 from keras.models import Sequential, load_model
 from keras.layers import Conv2D, MaxPool2D, Dense, Flatten
 from keras.preprocessing.image import ImageDataGenerator
@@ -10,6 +8,8 @@ from keras.applications.vgg16 import VGG16
 from keras.models import Model
 from rich.progress import Progress
 from engine.config import CATEGORIES, MODEL_PATH, TEST_PATH, TRAIN_PATH
+from skimage.transform import resize
+from skimage.io import imread
 
 
 class RoadDetectionModel:

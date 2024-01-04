@@ -1,9 +1,7 @@
-
-
-
 from numpy import ndarray
-from skimage.io import imread
 from engine.cnn.road_detection_model import RoadDetectionModel
+from skimage.io import imread
+
 
 def classify_road_condition(img: ndarray = None, img_path: str = None):
     if img_path is not None and img is None:
