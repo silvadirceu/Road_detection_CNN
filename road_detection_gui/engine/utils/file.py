@@ -9,7 +9,6 @@ DIR_OUT_PATH = "data"
 
 def video2image(file_name: str, step: int, dir_out: str = DIR_OUT_PATH):
     cam = cv2.VideoCapture(file_name)
-
     try:
         if not os.path.exists(dir_out):
             os.makedirs(dir_out)

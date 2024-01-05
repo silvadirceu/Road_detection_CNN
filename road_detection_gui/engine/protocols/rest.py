@@ -1,6 +1,5 @@
 import requests
 from engine.protocols.protocol import Protocol
-from engine.utils.file import save_uploaded_file, video2image
 from ..utils.data import bytes_to_base64_utf8encoded, read_all_bytes
 
 

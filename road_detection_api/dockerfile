@@ -12,5 +12,5 @@ COPY . .
 
 EXPOSE 8000
 
-CMD ["python", "/app/api/main.py"]
+CMD ["python", "/app/main.py"]
 

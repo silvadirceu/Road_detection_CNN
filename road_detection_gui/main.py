@@ -3,7 +3,6 @@ import streamlit as st
 from dotenv import load_dotenv
 from requests import Response
 from engine.protocols.rest import Rest
-from engine.utils.data import read_all_bytes
 from engine.utils.file import save_uploaded_file, video2image
 from engine.protocols.protocol import Protocol
 
