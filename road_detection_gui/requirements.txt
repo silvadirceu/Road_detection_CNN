@@ -2,3 +2,4 @@ streamlit
 grpcio
 grpcio-tools
 python-dotenv
+opencv-python
