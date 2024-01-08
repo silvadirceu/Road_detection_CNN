@@ -13,7 +13,7 @@ async def root():
     return {"message": "api is running"}
 
 @app.post("/predict")
-async def predict(file_base64: str = Form(...)):
+async def predict(file_base64: str):
     base64_decoded = base64.b64decode(file_base64)
     image = Image.open(io.BytesIO(base64_decoded))
     image = np.array(image)
