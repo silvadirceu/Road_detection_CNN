@@ -1,6 +1,6 @@
 import base64
 import io
-from fastapi import FastAPI, File, Form, UploadFile
+from fastapi import FastAPI, Form
 import numpy as np
 from api.config import PREDICT_PATH
 from api.controllers.road_detection_controller import classify_road_condition
