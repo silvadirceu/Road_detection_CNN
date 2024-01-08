@@ -36,8 +36,8 @@ def main():
 
         elif file_extension in ["png", "jpg"]:
             st.image(uploaded_file)
-            img_bytes = rest.send(uploaded_file.read())
-            print_response(img_bytes)
+            response = rest.send(uploaded_file.read())
+            print_response(response)
         else:
             st.write("Wrong format")
 

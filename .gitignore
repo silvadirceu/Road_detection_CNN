@@ -137,3 +137,4 @@ flagged
 road_images
 **/ckpt/
 data
+road_detection_api.code-workspace
