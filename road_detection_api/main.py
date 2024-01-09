@@ -34,7 +34,6 @@ async def predict(filename: str, format: str):
 
 
 if __name__ == "__main__":
-    print("GRPC initiated at port 50051")
-    grpc_server.run()
+    grpc_server.run(host="0.0.0.0", port="8000")
     # print("RestAPI initiated at port 8000")
     # uvicorn.run(app, host="0.0.0.0", port=8000)

@@ -9,7 +9,7 @@ import proto.file_upload_pb2 as file_upload_pb2
 import proto.file_upload_pb2_grpc as file_upload_pb2_grpc
 
 
-class GrpcServer():
+class GrpcServer:
     def __init__(self):
         pass
 
@@ -35,4 +35,7 @@ class GrpcServer():
         )
         server.add_insecure_port(f"{host}:{port}")
         server.start()
+        print(
+            f"gRPC Server running at {host}:{port}",
+        )
         server.wait_for_termination()
