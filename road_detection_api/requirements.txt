@@ -9,4 +9,5 @@ uvicorn[standard]==0.25.0
 opencv-python==4.9.0.80
 rich==13.7.0
 python-multipart==0.0.6
-
+grpcio
+grpcio-tools

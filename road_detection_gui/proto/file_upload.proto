@@ -1,0 +1,14 @@
+syntax="proto3";
+
+message FileUploadRequest{
+    string file = 1;
+}
+
+message FileUploadResponse{
+    string classification = 1;
+    string details = 2;
+}
+
+service FileUploadService{
+    rpc SendFile(FileUploadRequest) returns (FileUploadResponse);
+}
