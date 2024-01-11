@@ -1,37 +1,37 @@
-import base64
 from concurrent import futures
-import io
 import grpc
-import numpy as np
-from api.controllers.road_detection_controller import classify_road_condition
-from PIL import Image
+from controllers.road_detection_controller import classify_road_condition
+from utils.serializers import bytes_to_ndarray
 import proto.file_upload_pb2 as file_upload_pb2
 import proto.file_upload_pb2_grpc as file_upload_pb2_grpc
+
+
+MAX_MESSAGE_LENGTH = 200 * 1024 * 1024
 
 
 class GrpcServer:
     def __init__(self):
         pass
 
-    class __UploadFileService(file_upload_pb2_grpc.FileUploadServiceServicer):
+    class __TritonPredictService(file_upload_pb2_grpc.TritonPredictServiceServicer):
         def __init__(self):
-            self.request = None
+            pass
 
-        def SendFile(self, request, context):
-            file = request.file
-            base64_decoded = base64.b64decode(file)
-            image = Image.open(io.BytesIO(base64_decoded))
-            image = np.array(image)
-            prediction = classify_road_condition(img=image)
-            result = file_upload_pb2.FileUploadResponse(
-                classification=prediction.predicted_category, details=prediction.info
-            )
+        def TritonPredict(self, request:file_upload_pb2.TritonPredictRequest, context):
+            prediction = classify_road_condition(img=bytes_to_ndarray(request.chunk))
+            result = file_upload_pb2.TritonPredictResponse(classification=prediction.predicted_category, details=prediction.info)
             return result
 
     def run(self, host="localhost", port="50051", max_workers=10):
-        server = grpc.server(futures.ThreadPoolExecutor(max_workers=max_workers))
-        file_upload_pb2_grpc.add_FileUploadServiceServicer_to_server(
-            self.__UploadFileService(), server
+        options = [
+            ("grpc.max_send_message_length", MAX_MESSAGE_LENGTH),
+            ("grpc.max_receive_message_length", MAX_MESSAGE_LENGTH),
+        ]
+        server = grpc.server(
+            futures.ThreadPoolExecutor(max_workers=max_workers), options=options
+        )
+        file_upload_pb2_grpc.add_TritonPredictServiceServicer_to_server(
+            self.__TritonPredictService(), server
         )
         server.add_insecure_port(f"{host}:{port}")
         server.start()

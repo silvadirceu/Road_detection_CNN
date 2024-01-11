@@ -1,32 +1,29 @@
-from typing import Any
 import cv2
 import os
-from engine.utils.data import read_all_bytes
-from streamlit.runtime.uploaded_file_manager import UploadedFile
+from engine.utils.serializers import ndarray_to_bytes
 
 DIR_OUT_PATH = "data"
 
 
-def video2image(file_name: str, step: int, dir_out: str = DIR_OUT_PATH):
-    cam = cv2.VideoCapture(file_name)
-    try:
-        if not os.path.exists(dir_out):
-            os.makedirs(dir_out)
-    except OSError:
-        print("Error: Creating directory of data")
+class FileInfo:
+    def __init__(self, name: str, chunk: bytes, path=""):
+        self.name = name
+        self.ext = os.path.basename(self.name).split(".")[-1]
+        self.chunk = chunk
+        self.path = path
 
+
+def video2image(file_info: FileInfo, step: int):
+    save_uploaded_file(file_info.ext, file_info.chunk)
+
+    cam = cv2.VideoCapture(os.path.join(DIR_OUT_PATH, f"dump." + file_info.ext))
     current_frame = 0
     while True:
         ret, frame = cam.read()
-
         if ret:
             if current_frame % step == 0:
-                name = os.path.join(dir_out, "frame" + str(current_frame) + ".jpg")
-                cv2.imwrite(name, frame)
-                img_bytes = read_all_bytes(name)
                 current_frame += 1
-                yield img_bytes, current_frame
-
+                yield ndarray_to_bytes(frame), current_frame
             current_frame += 1
         else:
             cam.release()
@@ -34,14 +31,20 @@ def video2image(file_name: str, step: int, dir_out: str = DIR_OUT_PATH):
             break
 
 
-def save_uploaded_file(uploaded_file: UploadedFile, dir_out=DIR_OUT_PATH):
+def image2bytes(file_info: FileInfo):
+    save_uploaded_file(file_info.ext, file_info.chunk)
+    img_array = cv2.imread(os.path.join(DIR_OUT_PATH, f"dump." + file_info.ext))
+    return ndarray_to_bytes(img_array)
+
+
+def save_uploaded_file(ext: str, file_bytes, dir_out=DIR_OUT_PATH):
     try:
         if not os.path.exists(dir_out):
             os.makedirs(dir_out)
     except OSError:
         print("Error: Creating directory of data")
 
-    file_path = os.path.join(dir_out, uploaded_file.name)
+    file_path = os.path.join(dir_out, f"dump." + ext)
     with open(file_path, "wb") as f:
-        f.write(uploaded_file.read())
+        f.write(file_bytes)
     return file_path

@@ -11,3 +11,5 @@ rich==13.7.0
 python-multipart==0.0.6
 grpcio
 grpcio-tools
+msgpack
+msgpack_numpy

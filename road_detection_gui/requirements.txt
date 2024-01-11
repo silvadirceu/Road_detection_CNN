@@ -3,3 +3,5 @@ grpcio
 grpcio-tools
 python-dotenv
 opencv-python
+msgpack
+msgpack_numpy

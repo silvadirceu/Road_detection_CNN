@@ -1,0 +1,6 @@
+grpcio
+grpcio-tools
+opencv-python
+msgpack
+msgpack_numpy
+python-dotenv

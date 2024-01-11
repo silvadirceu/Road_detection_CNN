@@ -1,14 +1,39 @@
 syntax="proto3";
 
-message FileUploadRequest{
-    string file = 1;
+message TritonPredictRequest{
+    bytes chunk = 1;
 }
 
-message FileUploadResponse{
+message TritonPredictResponse{
     string classification = 1;
     string details = 2;
 }
 
-service FileUploadService{
-    rpc SendFile(FileUploadRequest) returns (FileUploadResponse);
+service TritonPredictService{
+    rpc TritonPredict(TritonPredictRequest) returns (TritonPredictResponse);
 }
+
+message UploadVideoRequest{
+    bytes chunk = 1;
+}
+
+message UploadVideoResponse{
+    repeated TritonPredictResponse predictions = 1;
+}
+
+service UploadVideoService{
+    rpc UploadVideo(UploadVideoRequest) returns (UploadVideoResponse);
+}
+
+message UploadImageRequest{
+    bytes chunk = 1;
+}
+
+message UploadImageResponse{
+    TritonPredictResponse prediction = 1;
+}
+
+service UploadImageService{
+    rpc UploadImage(UploadImageRequest) returns (UploadImageResponse);
+}
+

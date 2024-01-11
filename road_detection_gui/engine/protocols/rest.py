@@ -1,9 +1,9 @@
 import requests
-from engine.protocols.protocol import Protocol
-from ..utils.data import bytes_to_base64_utf8encoded, read_all_bytes
+from abstractions.http_handler import HttpHandler
+from engine.utils.serializers import bytes_to_base64_utf8encoded
 
 
-class Rest(Protocol):
+class Rest(HttpHandler):
     def __init__(self, api_url):
         self.api_url = api_url
 

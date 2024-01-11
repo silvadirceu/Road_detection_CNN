@@ -14,17 +14,29 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x11\x66ile_upload.proto\"!\n\x11\x46ileUploadRequest\x12\x0c\n\x04\x66ile\x18\x01 \x01(\t\"=\n\x12\x46ileUploadResponse\x12\x16\n\x0e\x63lassification\x18\x01 \x01(\t\x12\x0f\n\x07\x64\x65tails\x18\x02 \x01(\t2H\n\x11\x46ileUploadService\x12\x33\n\x08SendFile\x12\x12.FileUploadRequest\x1a\x13.FileUploadResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x11\x66ile_upload.proto\"%\n\x14TritonPredictRequest\x12\r\n\x05\x63hunk\x18\x01 \x01(\x0c\"@\n\x15TritonPredictResponse\x12\x16\n\x0e\x63lassification\x18\x01 \x01(\t\x12\x0f\n\x07\x64\x65tails\x18\x02 \x01(\t\"#\n\x12UploadVideoRequest\x12\r\n\x05\x63hunk\x18\x01 \x01(\x0c\"B\n\x13UploadVideoResponse\x12+\n\x0bpredictions\x18\x01 \x03(\x0b\x32\x16.TritonPredictResponse\"#\n\x12UploadImageRequest\x12\r\n\x05\x63hunk\x18\x01 \x01(\x0c\"A\n\x13UploadImageResponse\x12*\n\nprediction\x18\x01 \x01(\x0b\x32\x16.TritonPredictResponse2V\n\x14TritonPredictService\x12>\n\rTritonPredict\x12\x15.TritonPredictRequest\x1a\x16.TritonPredictResponse2N\n\x12UploadVideoService\x12\x38\n\x0bUploadVideo\x12\x13.UploadVideoRequest\x1a\x14.UploadVideoResponse2N\n\x12UploadImageService\x12\x38\n\x0bUploadImage\x12\x13.UploadImageRequest\x1a\x14.UploadImageResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'file_upload_pb2', _globals)
 if _descriptor._USE_C_DESCRIPTORS == False:
   DESCRIPTOR._options = None
-  _globals['_FILEUPLOADREQUEST']._serialized_start=21
-  _globals['_FILEUPLOADREQUEST']._serialized_end=54
-  _globals['_FILEUPLOADRESPONSE']._serialized_start=56
-  _globals['_FILEUPLOADRESPONSE']._serialized_end=117
-  _globals['_FILEUPLOADSERVICE']._serialized_start=119
-  _globals['_FILEUPLOADSERVICE']._serialized_end=191
+  _globals['_TRITONPREDICTREQUEST']._serialized_start=21
+  _globals['_TRITONPREDICTREQUEST']._serialized_end=58
+  _globals['_TRITONPREDICTRESPONSE']._serialized_start=60
+  _globals['_TRITONPREDICTRESPONSE']._serialized_end=124
+  _globals['_UPLOADVIDEOREQUEST']._serialized_start=126
+  _globals['_UPLOADVIDEOREQUEST']._serialized_end=161
+  _globals['_UPLOADVIDEORESPONSE']._serialized_start=163
+  _globals['_UPLOADVIDEORESPONSE']._serialized_end=229
+  _globals['_UPLOADIMAGEREQUEST']._serialized_start=231
+  _globals['_UPLOADIMAGEREQUEST']._serialized_end=266
+  _globals['_UPLOADIMAGERESPONSE']._serialized_start=268
+  _globals['_UPLOADIMAGERESPONSE']._serialized_end=333
+  _globals['_TRITONPREDICTSERVICE']._serialized_start=335
+  _globals['_TRITONPREDICTSERVICE']._serialized_end=421
+  _globals['_UPLOADVIDEOSERVICE']._serialized_start=423
+  _globals['_UPLOADVIDEOSERVICE']._serialized_end=501
+  _globals['_UPLOADIMAGESERVICE']._serialized_start=503
+  _globals['_UPLOADIMAGESERVICE']._serialized_end=581
 # @@protoc_insertion_point(module_scope)
