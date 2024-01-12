@@ -2,7 +2,7 @@ import cv2
 import os
 from utils.serializers import ndarray_to_bytes
 
-DIR_OUT_PATH = "data"
+DIR_OUT_PATH = "."
 
 
 class FileInfo:
@@ -15,7 +15,6 @@ class FileInfo:
 
 def video2image(file_info: FileInfo, step: int):
     save_uploaded_file(file_info)
-
     cam = cv2.VideoCapture(os.path.join(DIR_OUT_PATH, file_info.name))
     current_frame = 0
     while True:
@@ -29,11 +28,13 @@ def video2image(file_info: FileInfo, step: int):
             cam.release()
             cv2.destroyAllWindows()
             break
+    delete_file(file_info)
 
 
 def image2bytes(file_info: FileInfo):
     save_uploaded_file(file_info)
     img_array = cv2.imread(os.path.join(DIR_OUT_PATH, file_info.name))
+    delete_file(file_info)
     return ndarray_to_bytes(img_array)
 
 
@@ -48,3 +49,8 @@ def save_uploaded_file(file_info: FileInfo, dir_out=DIR_OUT_PATH):
     with open(file_path, "wb") as f:
         f.write(file_info.chunk)
     return file_path
+
+def delete_file(file_info: FileInfo, dir=DIR_OUT_PATH):
+    path = os.path.join(dir, file_info.name)
+    if os.path.exists(path):
+        os.remove(path)

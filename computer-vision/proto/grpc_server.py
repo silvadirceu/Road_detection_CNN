@@ -1,10 +1,10 @@
 from concurrent import futures
 import grpc
 from grpc import ServicerContext
-from handlers.video_handler import VideoHandler
+from abstractions.http_handler import HttpHandler
+from abstractions.http_server import HttpServer
 import proto.file_upload_pb2_grpc as file_upload_pb2_grpc
 from proto.file_upload_pb2 import (
-    TritonPredictResponse,
     UploadImageRequest,
     UploadVideoRequest,
     UploadImageResponse,
@@ -16,20 +16,22 @@ from utils.file import FileInfo, image2bytes, video2image
 MAX_MESSAGE_LENGTH = 200 * 1024 * 1024
 
 
-class GrpcServer:
-    def __init__(self, triton_client: TritonClient):
-        self.triton_client = triton_client
+class GrpcServer(HttpServer):
+    def __init__(self, http_client: HttpHandler):
+        self.triton_client = http_client
         pass
 
     class __UploadImageService(file_upload_pb2_grpc.UploadImageServiceServicer):
-        def __init__(self,triton_client: TritonClient):
+        def __init__(self, triton_client: TritonClient):
             self.triton_client = triton_client
             pass
 
         def UploadImage(self, request: UploadImageRequest, context: ServicerContext):
             file_info = FileInfo("test.q", request.chunk)
             img_bytes = image2bytes(file_info)
-            response = UploadImageResponse(prediction=self.triton_client.send(img_bytes))
+            response = UploadImageResponse(
+                prediction=self.triton_client.send(img_bytes)
+            )
             return response
 
     class __UploadVideoService(file_upload_pb2_grpc.UploadVideoServiceServicer):
@@ -38,7 +40,7 @@ class GrpcServer:
             pass
 
         def UploadVideo(self, request: UploadVideoRequest, context: ServicerContext):
-            file_info = FileInfo("test.q", request.chunk)
+            file_info = FileInfo("dump", request.chunk)
             frames_generator = video2image(file_info, 20)
             predictions = []
             for frame_byte in frames_generator:

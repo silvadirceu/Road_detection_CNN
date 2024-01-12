@@ -9,7 +9,7 @@ uvicorn[standard]==0.25.0
 opencv-python==4.9.0.80
 rich==13.7.0
 python-multipart==0.0.6
-grpcio
-grpcio-tools
-msgpack
-msgpack_numpy
+grpcio==1.60.0
+grpcio-tools==1.60.0
+msgpack==1.0.7
+msgpack_numpy==0.4.8

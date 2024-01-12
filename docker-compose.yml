@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  gui:
+    container_name: gui
+    build:
+      context: ./gui
+    ports:
+      - "8501:8501"
+    networks:
+      - road_detection_network
+
+  triton-mock:
+    container_name: triton-mock
+    build:
+      context: ./triton-mock
+    ports:
+      - "8000:8000"
+    networks:
+      - road_detection_network
+
+  computer-vision:
+    container_name: computer-vision
+    build:
+      context: ./computer-vision
+    ports:
+      - "8080:8080"
+    networks:
+      - road_detection_network
+
+#  stream:
+#    build:
+#      context: ./stream
+#    ports:
+#      - "8001:8001"
+#    networks:
+ #     - road_detection_network
+
+networks:
+  road_detection_network:
+    driver: bridge

@@ -114,7 +114,7 @@ class RoadDetectionModel():
 
         y = self.model.predict(img)
         ind = y.argmax()
-
+        
         return self.categories[ind]
 
     def apply_transfer_learning(self):
