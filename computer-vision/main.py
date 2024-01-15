@@ -8,9 +8,9 @@ GRPC_HOST = os.environ.get("GRPC_HOST")
 GRPC_TRITON_PORT = os.environ.get("GRPC_TRITON_PORT")
 GRPC_CV_PORT = os.environ.get("GRPC_CV_PORT")
 CAMERA_CONNECTION_STRING = os.environ.get("CAMERA_CONNECTION_STRING")
-GRPC_TRITON_CONTAINER = os.environ.get("GRPC_TRITON_CONTAINER")
+TRITON_CONTAINER = os.environ.get("TRITON_CONTAINER")
 
-triton_client = TritonClient(GRPC_TRITON_CONTAINER, GRPC_TRITON_PORT)
+triton_client = TritonClient(TRITON_CONTAINER, GRPC_TRITON_PORT)
 server = GrpcServer(triton_client)
 
 

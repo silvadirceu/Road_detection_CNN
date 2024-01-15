@@ -2,8 +2,8 @@ from concurrent import futures
 import grpc
 from controllers.road_detection_controller import classify_road_condition
 from utils.serializers import bytes_to_ndarray
-import proto.file_upload_pb2 as file_upload_pb2
-import proto.file_upload_pb2_grpc as file_upload_pb2_grpc
+from proto import file_upload_pb2
+from proto import file_upload_pb2_grpc
 
 
 MAX_MESSAGE_LENGTH = 200 * 1024 * 1024

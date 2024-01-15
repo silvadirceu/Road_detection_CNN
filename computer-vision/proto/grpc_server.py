@@ -1,9 +1,9 @@
 from concurrent import futures
 import grpc
 from grpc import ServicerContext
-from abstractions.http_handler import HttpHandler
+from abstractions.http_client import HttpClient
 from abstractions.http_server import HttpServer
-import proto.file_upload_pb2_grpc as file_upload_pb2_grpc
+from proto import file_upload_pb2_grpc
 from proto.file_upload_pb2 import (
     UploadImageRequest,
     UploadVideoRequest,
@@ -17,7 +17,7 @@ MAX_MESSAGE_LENGTH = 200 * 1024 * 1024
 
 
 class GrpcServer(HttpServer):
-    def __init__(self, http_client: HttpHandler):
+    def __init__(self, http_client: HttpClient):
         self.triton_client = http_client
         pass
 
@@ -27,7 +27,7 @@ class GrpcServer(HttpServer):
             pass
 
         def UploadImage(self, request: UploadImageRequest, context: ServicerContext):
-            file_info = FileInfo("test.q", request.chunk)
+            file_info = FileInfo("dump", request.chunk)
             img_bytes = image2bytes(file_info)
             response = UploadImageResponse(
                 prediction=self.triton_client.send(img_bytes)
@@ -64,6 +64,7 @@ class GrpcServer(HttpServer):
         file_upload_pb2_grpc.add_UploadVideoServiceServicer_to_server(
             self.__UploadVideoService(self.triton_client), server
         )
+
         server.add_insecure_port(f"{host}:{port}")
         server.start()
         print(

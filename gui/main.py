@@ -10,11 +10,11 @@ from proto.grpc_client import Grpc_Client
 
 load_dotenv()
 API_URL = os.environ.get("API_URL")
-GRPC_CV_CONTAINER = os.environ.get("GRPC_CV_CONTAINER")
+CV_CONTAINER = os.environ.get("CV_CONTAINER")
 GRPC_CV_PORT = os.environ.get("GRPC_CV_PORT")
 
 rest: HttpHandler = Rest(API_URL)
-grpc_cv_client = Grpc_Client(GRPC_CV_CONTAINER, GRPC_CV_PORT)
+grpc_cv_client = Grpc_Client(CV_CONTAINER, GRPC_CV_PORT)
 controller = SendFileController(grpc_cv_client)
 
 

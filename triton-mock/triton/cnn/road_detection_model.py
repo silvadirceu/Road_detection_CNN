@@ -5,7 +5,7 @@ from keras.models import Sequential, load_model
 from keras.layers import Conv2D, MaxPool2D, Dense, Flatten
 from keras.preprocessing.image import ImageDataGenerator
 from keras.applications.vgg16 import VGG16
-from keras.models import save_model
+from keras.models import save_model as sv_model
 import keras.models
 from rich.progress import Progress
 from triton.cnn.config import CATEGORIES, MODEL_PATH, TEST_PATH, TRAIN_PATH
@@ -20,6 +20,9 @@ class RoadDetectionModel():
         self.train_path = TRAIN_PATH
         self.test_path = TEST_PATH
         self.model = load_model(MODEL_PATH)
+        
+    def save_model(self, filename):
+        sv_model(self.model, filename)
 
     def train(self):
         with Progress() as progress:

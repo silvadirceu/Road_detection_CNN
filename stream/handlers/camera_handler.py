@@ -1,24 +1,27 @@
 from threading import Thread
 from time import sleep
 import cv2
-from abstractions.http_handler import HttpHandler
+from abstractions.http_client import HttpClient
 from utils.serializers import ndarray_to_bytes
 import logging
 
 
 class CameraHandler:
-    def __init__(self, httpHandler: HttpHandler, connection_string: str):
+    def __init__(self, httpHandler: HttpClient, connection_string: str):
         self.http_handler = httpHandler
         self.connection_string = connection_string
         pass
 
-    def __send_video(self, fps, step):
+    def __send_video(self, fps, step, tries=5):
+        logging.log(1, "Connecting to camera host")
         cap = cv2.VideoCapture(self.connection_string)
-        while not cap.isOpened():
+        curr_try = 0
+        while not cap.isOpened() and curr_try < tries:
             cap.open(self.connection_string)
-            logging.warning(f"Connection failed")
-            sleep(5)
-        print("Connection sucessfull with the host")
+            logging.warning(f"{curr_try}: Connection failed")
+            curr_try+=1
+            sleep(15)
+        logging.log(1, "Connection sucessfull with the host")
         
         frame_count = 0
         while cap.isOpened():
