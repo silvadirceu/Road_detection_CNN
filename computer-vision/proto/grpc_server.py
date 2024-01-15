@@ -5,6 +5,7 @@ from abstractions.http_client import HttpClient
 from abstractions.http_server import HttpServer
 from proto import file_upload_pb2_grpc
 from proto.file_upload_pb2 import (
+    TritonPredictResponse,
     UploadImageRequest,
     UploadVideoRequest,
     UploadImageResponse,
@@ -29,8 +30,10 @@ class GrpcServer(HttpServer):
         def UploadImage(self, request: UploadImageRequest, context: ServicerContext):
             file_info = FileInfo("dump", request.chunk)
             img_bytes = image2bytes(file_info)
+            triton_grpc_response = self.triton_client.send(img_bytes)
+            triton_response = TritonPredictResponse(classification=triton_grpc_response, details="not available yet")
             response = UploadImageResponse(
-                prediction=self.triton_client.send(img_bytes)
+                prediction=triton_response
             )
             return response
 
@@ -44,8 +47,9 @@ class GrpcServer(HttpServer):
             frames_generator = video2image(file_info, 20)
             predictions = []
             for frame_byte in frames_generator:
-                predict_result = self.triton_client.send(frame_byte)
-                predictions.append(predict_result)
+                triton_grpc_response = self.triton_client.send(frame_byte)
+                triton_response = TritonPredictResponse(classification=triton_grpc_response, details="not available yet")
+                predictions.append(triton_response)
             response = UploadVideoResponse(predictions=predictions)
             return response
 

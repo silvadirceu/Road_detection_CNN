@@ -10,15 +10,6 @@ services:
     networks:
       - road_detection_network
 
-  triton-mock:
-    container_name: triton-mock
-    build:
-      context: ./triton-mock
-    ports:
-      - "8000:8000"
-    networks:
-      - road_detection_network
-
   computer-vision:
     container_name: computer-vision
     build:
@@ -28,13 +19,31 @@ services:
     networks:
       - road_detection_network
 
-  stream:
-    build:
-      context: ./stream
+#  stream:
+#    build:
+#      context: ./stream
+#    ports:
+#      - "8001:8001"
+#    networks:
+#     - road_detection_network
+     
+  triton-server:
+    image: nvcr.io/nvidia/tritonserver:23.12-py3
+    volumes:
+      - ${PWD}/triton/model_repository:/models
     ports:
+      - "8000:8000"
       - "8001:8001"
+      - "8002:8002"
+    command:
+      - tritonserver
+      - --model-repository=/models
+      - --backend-config=tensorflow,version=2
     networks:
-     - road_detection_network
+      - road_detection_network
+      
+volumes:
+  model_repository:
 
 networks:
   road_detection_network:

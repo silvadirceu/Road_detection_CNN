@@ -1,0 +1,17 @@
+name: "road_detection_cnn"
+platform: "tensorflow_savedmodel"
+max_batch_size : 0
+input [
+  {
+    name: "conv2d_input"
+    data_type: TYPE_FP32
+    dims: [-1, 150, 150, 1]
+  }
+]
+output [
+  {
+    name: "dense_1"
+    data_type: TYPE_FP32
+    dims: [-1, 3]
+  }
+]

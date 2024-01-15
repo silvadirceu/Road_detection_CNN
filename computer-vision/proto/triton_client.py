@@ -1,25 +1,29 @@
-import grpc
+import numpy as np
 from abstractions.http_client import HttpClient
-import proto.file_upload_pb2_grpc as file_upload_pb2_grpc
-import proto.file_upload_pb2 as file_upload_pb2
+from tritonclient.grpc import InferenceServerClient, InferInput, InferRequestedOutput
+from skimage.transform import resize
+from utils.serializers import bytes_to_ndarray
 
 MAX_MESSAGE_LENGTH = 200 * 1024 * 1024
 
 
 class TritonClient(HttpClient):
     def __init__(self, host="localhost", port="50051"):
-        options = [
-            ("grpc.max_send_message_length", MAX_MESSAGE_LENGTH),
-            ("grpc.max_receive_message_length", MAX_MESSAGE_LENGTH),
-        ]
         self.host = host
         self.server_port = port
-        self.channel = grpc.insecure_channel(
-            "{}:{}".format(self.host, self.server_port), options=options
-        )
-        self.stub_predict = file_upload_pb2_grpc.TritonPredictServiceStub(self.channel)
+        self.__triton_client = InferenceServerClient(url=f"{host}:{port}")
 
-    def send(self, chunk: bytes) -> file_upload_pb2.TritonPredictResponse:
-        message = file_upload_pb2.TritonPredictRequest(chunk=chunk)
-        response = self.stub_predict.TritonPredict(message)
-        return response
+    def send(self, chunk: bytes):
+        img_array = bytes_to_ndarray(chunk)
+        img = resize(img_array, (150, 150, 1))
+        img_resized = img.reshape(1, 150, 150, 1)
+        img_resized = img_resized.astype(np.float32)
+        inputs = InferInput("conv2d_input", img_resized.shape, datatype="FP32")
+        inputs.set_data_from_numpy(img_resized)
+        output = InferRequestedOutput("dense_1", class_count=3)
+        response = self.__triton_client.infer(
+            model_name="road_detection_cnn", inputs=[inputs], outputs=[output]
+        )
+        result = response.as_numpy("dense_1")
+        result = str(result[0])
+        return result.split(":")[-1].replace("'", "")
