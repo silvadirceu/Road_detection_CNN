@@ -1,6 +1,6 @@
 # Deploying a TensorFlow Model
 
-This README demonstrates how to deploy a simple ResNet model on Triton Inference Server.
+This README demonstrates how to deploy a simple model on Triton Inference Server.
 
 ## Step 1: Export the Model
 
