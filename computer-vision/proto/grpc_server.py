@@ -29,8 +29,8 @@ class GrpcServer(HttpServer):
 
         def UploadImage(self, request: UploadImageRequest, context: ServicerContext):
             file_info = FileInfo("dump", request.chunk)
-            img_bytes = image2bytes(file_info)
-            triton_grpc_response = self.triton_client.send(img_bytes)
+            img_array_bytes = image2bytes(file_info)
+            triton_grpc_response = self.triton_client.send(img_array_bytes)
             triton_response = TritonPredictResponse(classification=triton_grpc_response, details="not available yet")
             response = UploadImageResponse(
                 prediction=triton_response

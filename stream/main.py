@@ -4,8 +4,8 @@ from proto.grpc_client import GrpcClient
 from dotenv import load_dotenv
 
 load_dotenv()
-CV_CONTAINER = os.environ.get("CV_CONTAINER")
-GRPC_CV_PORT = os.environ.get("GRPC_CV_PORT")
+CV_CONTAINER = os.environ.get("CV_CONTAINER") or "computer-vision"
+GRPC_CV_PORT = os.environ.get("GRPC_CV_PORT") or "80"
 CAMERA_CONNECTION_STRING = os.environ.get("CAMERA_CONNECTION_STRING")
 
 cv_client = GrpcClient(CV_CONTAINER, GRPC_CV_PORT)

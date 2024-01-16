@@ -1,6 +1,6 @@
-grpcio
-grpcio-tools
-opencv-python
-msgpack
-msgpack_numpy
-python-dotenv
+grpcio==1.60.0
+grpcio-tools==1.60.0
+opencv-python==4.9.0.80
+msgpack==1.0.7
+msgpack_numpy==0.4.8
+python-dotenv==1.0.0

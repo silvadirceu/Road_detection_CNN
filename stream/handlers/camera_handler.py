@@ -8,6 +8,8 @@ import logging
 
 class CameraHandler:
     def __init__(self, httpHandler: HttpClient, connection_string: str):
+        if not connection_string:
+            raise TypeError("Camera connection string cannot be a Falsy value")
         self.http_handler = httpHandler
         self.connection_string = connection_string
         pass
