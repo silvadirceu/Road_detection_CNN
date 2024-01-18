@@ -6,7 +6,7 @@ Project Description
 
 1. Clone the Repository:
    ```bash
-   git clone https://github.com/your-username/road-scanner.git
+   git clone https://github.com/silvadirceu/Road_detection_CNN.git
    cd road-scanner
    ```
 2. Setup Environment Variables:
