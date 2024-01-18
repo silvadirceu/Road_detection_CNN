@@ -6,44 +6,46 @@ services:
     build:
       context: ./gui
     ports:
-      - "8501:8501"
+      - ${COMPUTER_VISION_GUI_PORT}:80
+    env_file:
+      - .env
     networks:
       - road_detection_network
 
   computer-vision:
-    container_name: computer-vision
+    container_name: ${COMPUTER_VISION_SERVICE}
     build:
       context: ./computer-vision
     ports:
-      - "8080:8080"
+      - ${COMPUTER_VISION_PORT}:80
+    env_file:
+      - .env
     networks:
       - road_detection_network
 
-  stream:
-    build:
-      context: ./stream
-    ports:
-      - "8181:8181"
-    networks:
-     - road_detection_network
+  # stream:
+  #   build:
+  #     context: ./stream
+  #   ports:
+  #     - "8181:8181"
+  #   networks:
+  #    - road_detection_network
     
   triton-server:
     image: nvcr.io/nvidia/tritonserver:23.12-py3
+    container_name: ${TRITON_SERVICE}
     volumes:
-      - ${PWD}/triton/model_repository:/models
+      - ${TRITON_MODEL_PATH}:/models
     ports:
-      - "8000:8000"
-      - "8001:8001"
-      - "8002:8002"
+      - ${TRITON_HTTP_PORT}:8000
+      - ${TRITON_GRPC_PORT}:8001
+      - ${TRITON_METRICS_PORT}:8002
     command:
       - tritonserver
       - --model-repository=/models
       - --backend-config=tensorflow,version=2
     networks:
       - road_detection_network
-      
-volumes:
-  model_repository:
 
 networks:
   road_detection_network:

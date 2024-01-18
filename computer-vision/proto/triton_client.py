@@ -21,6 +21,7 @@ class TritonClient(HttpClient):
         inputs = InferInput("conv2d_input", img_resized.shape, datatype="FP32")
         inputs.set_data_from_numpy(img_resized)
         output = InferRequestedOutput("dense_1", class_count=3)
+        print(f"{self.host}:{self.server_port}")
         response = self.__triton_client.infer(
             model_name="road_detection_cnn", inputs=[inputs], outputs=[output]
         )

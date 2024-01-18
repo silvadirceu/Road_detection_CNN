@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: road-detection-gui-deployment
+  namespace: road-detection
+  labels:
+    app: road-detection-gui-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: road-detection-gui
+  template:
+    metadata:
+      labels:
+        app: road-detection-gui
+    spec:
+      containers:
+      - name: road-detection-gui
+        image: api.innovox.ai/road-detection-cnn-gui:v1.0
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: CV_CONTAINER
+          value: "road-detection-computer-vision-service"
+        - name: GRPC_CV_PORT
+          value: "8080"
+      imagePullSecrets:
+        - name: innovox-registry
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: road-detection-gui-service
+  namespace: road-detection
+  labels:
+    app: road-detection-gui-deployment
+spec:
+  selector:
+    app: road-detection-gui
+  ports:
+    - name: road-detection-gui
+      port: 8501
+      targetPort: 8501
+      nodePort: 30357
+  type: NodePort

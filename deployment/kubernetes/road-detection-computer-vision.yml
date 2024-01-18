@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: road-detection-computer-vision-deployment
+  namespace: road-detection
+  labels:
+    app: road-detection-computer-vision-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: road-detection-computer-vision
+  template:
+    metadata:
+      labels:
+        app: road-detection-computer-vision
+    spec:
+      containers:
+      - name: road-detection-computer-vision
+        image: api.innovox.ai/road-detection-cnn-computer-vision:v1.0
+        imagePullPolicy: IfNotPresent
+      imagePullSecrets:
+        - name: innovox-registry
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: road-detection-computer-vision-service
+  namespace: road-detection
+  labels:
+    app: road-detection-computer-vision-deployment
+spec:
+  selector:
+    app: road-detection-computer-vision
+  ports:
+    - name: road-detection-computer-vision
+      port: 8080
+      targetPort: 8080
+      nodePort: 30351
+  type: NodePort

@@ -10,16 +10,17 @@ from proto.grpc_client import Grpc_Client
 
 load_dotenv()
 API_URL = os.environ.get("API_URL")
-CV_CONTAINER = os.environ.get("CV_CONTAINER")
-GRPC_CV_PORT = os.environ.get("GRPC_CV_PORT")
+COMPUTER_VISION_SERVICE = os.environ.get("COMPUTER_VISION_SERVICE")
+COMPUTER_VISION_PORT = os.environ.get("COMPUTER_VISION_PORT")
 
 rest: HttpHandler = Rest(API_URL)
-grpc_cv_client = Grpc_Client(CV_CONTAINER, GRPC_CV_PORT)
+grpc_cv_client = Grpc_Client(COMPUTER_VISION_SERVICE, COMPUTER_VISION_PORT)
 controller = SendFileController(grpc_cv_client)
 
 
 def gui():
     st.title("Road Detection CNN")
+    st.title(f"{COMPUTER_VISION_SERVICE}")
     uploaded_file = st.file_uploader(
         "Choose a image/video file", type=["mp4", "avi", "png", "jpg"]
     )
