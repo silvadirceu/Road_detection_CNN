@@ -9,6 +9,7 @@ from proto.grpc_client import Grpc_Client
 
 
 load_dotenv()
+DEBUG = (os.getenv('DEBUG', 'False') == 'True')
 API_URL = os.environ.get("API_URL")
 COMPUTER_VISION_SERVICE = os.environ.get("COMPUTER_VISION_SERVICE")
 COMPUTER_VISION_PORT = os.environ.get("COMPUTER_VISION_PORT")
@@ -19,9 +20,18 @@ controller = SendFileController(grpc_cv_client)
 
 labels = ['dirty', 'potholes', 'clean']
 
+def display_dev_options():
+    st.sidebar.subheader("All Environment Variables")
+    for key, value in os.environ.items():
+        st.sidebar.text(f"{key}: {value}")
+
+
 def gui():
     st.title("Road Detection CNN")
-    st.title(f"{COMPUTER_VISION_SERVICE}")
+
+    if DEBUG:
+        display_dev_options()
+
     uploaded_file = st.file_uploader(
         "Choose a image/video file", type=["mp4", "avi", "png", "jpg"]
     )
