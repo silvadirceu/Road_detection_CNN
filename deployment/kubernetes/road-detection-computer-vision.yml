@@ -17,8 +17,30 @@ spec:
     spec:
       containers:
       - name: road-detection-computer-vision
-        image: api.innovox.ai/road-detection-cnn-computer-vision:v1.0
+        image: api.innovox.ai/road-detection-computer-vision:v0.1.1
         imagePullPolicy: IfNotPresent
+        env:
+        # Define the environment variable
+        - name: COMPUTER_VISION_CONTAINER_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: road-detection-config
+              key: COMPUTER_VISION_CONTAINER_HOST
+        - name: TRITON_GRPC_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: road-detection-config
+              key: TRITON_GRPC_PORT
+        - name: TRITON_SERVICE
+          valueFrom:
+            configMapKeyRef:
+              name: road-detection-config
+              key: TRITON_SERVICE
+        - name: COMPUTER_VISION_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: road-detection-config
+              key: COMPUTER_VISION_PORT 
       imagePullSecrets:
         - name: innovox-registry
 ---
@@ -35,6 +57,5 @@ spec:
   ports:
     - name: road-detection-computer-vision
       port: 8080
-      targetPort: 8080
-      nodePort: 30351
-  type: NodePort
+      targetPort: 80
+  type: ClusterIP

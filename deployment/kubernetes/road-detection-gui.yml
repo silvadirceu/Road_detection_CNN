@@ -17,13 +17,25 @@ spec:
     spec:
       containers:
       - name: road-detection-gui
-        image: api.innovox.ai/road-detection-cnn-gui:v1.0
+        image: api.innovox.ai/road-detection-gui:v0.1.1
         imagePullPolicy: IfNotPresent
         env:
-        - name: CV_CONTAINER
-          value: "road-detection-computer-vision-service"
-        - name: GRPC_CV_PORT
-          value: "8080"
+        # Define the environment variable
+        - name: COMPUTER_VISION_GUI_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: road-detection-config
+              key: COMPUTER_VISION_GUI_PORT
+        - name: COMPUTER_VISION_SERVICE
+          valueFrom:
+            configMapKeyRef:
+              name: road-detection-config
+              key: COMPUTER_VISION_SERVICE
+        - name: COMPUTER_VISION_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: road-detection-config
+              key: COMPUTER_VISION_PORT     
       imagePullSecrets:
         - name: innovox-registry
 ---
@@ -39,7 +51,7 @@ spec:
     app: road-detection-gui
   ports:
     - name: road-detection-gui
-      port: 8501
-      targetPort: 8501
+      port: 80
+      targetPort: 80
       nodePort: 30357
   type: NodePort
