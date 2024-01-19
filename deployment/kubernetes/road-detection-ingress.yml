@@ -1,0 +1,39 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: mw-admin
+  namespace: road-detection
+spec:
+  headers:
+    customResponseHeaders:
+      Content-Type: "application/javascript"
+  # stripPrefix:
+  #   forceSlash: false
+  #   prefixes:
+  #     - /road-detection
+---
+# Ingress
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: road-detection-ingress
+  namespace: road-detection
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/middleware: road-detection-mw-admin@kubernetescrd
+spec:
+  tls:
+  - hosts:
+    - api.innovox.ai
+    secretName: innovox-tls
+  rules:
+    - host: api.innovox.ai
+      http:
+        paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: road-detection-gui-service 
+              port:
+                number: 8501

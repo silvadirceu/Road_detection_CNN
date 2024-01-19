@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: road-detection-config
+  namespace: road-detection
+data:
+  DEV: "True"
+  COMPUTER_VISION_GUI_PORT: "8501"
+  COMPUTER_VISION_PORT: "80"
+  TRITON_HTTP_PORT: "8120"
+  TRITON_GRPC_PORT: "8121"
+  TRITON_METRICS_PORT: "8122"
+  COMPUTER_VISION_CONTAINER_HOST: "0.0.0.0"
+  COMPUTER_VISION_SERVICE: "road-detection-computer-vision-service"
+  TRITON_SERVICE: "triton-server-service"
+  TRITON_MODEL_PATH: "/home/joao/workspace/road_detection/Road_detection_CNN/triton/model_repository"

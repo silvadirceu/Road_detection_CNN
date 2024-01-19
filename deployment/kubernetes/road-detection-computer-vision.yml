@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: road-detection-computer-vision-deployment
+  namespace: road-detection
+  labels:
+    app: road-detection-computer-vision-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: road-detection-computer-vision
+  template:
+    metadata:
+      labels:
+        app: road-detection-computer-vision
+    spec:
+      containers:
+      - name: road-detection-computer-vision
+        image: api.innovox.ai/road-detection-computer-vision:v0.1.1
+        imagePullPolicy: IfNotPresent
+        env:
+        # Define the environment variable
+        - name: COMPUTER_VISION_CONTAINER_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: road-detection-config
+              key: COMPUTER_VISION_CONTAINER_HOST
+        - name: TRITON_GRPC_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: road-detection-config
+              key: TRITON_GRPC_PORT
+        - name: TRITON_SERVICE
+          valueFrom:
+            configMapKeyRef:
+              name: road-detection-config
+              key: TRITON_SERVICE
+        - name: COMPUTER_VISION_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: road-detection-config
+              key: COMPUTER_VISION_PORT 
+      imagePullSecrets:
+        - name: innovox-registry
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: road-detection-computer-vision-service
+  namespace: road-detection
+  labels:
+    app: road-detection-computer-vision-deployment
+spec:
+  selector:
+    app: road-detection-computer-vision
+  ports:
+    - name: road-detection-computer-vision
+      port: 8080
+      targetPort: 80
+  type: ClusterIP

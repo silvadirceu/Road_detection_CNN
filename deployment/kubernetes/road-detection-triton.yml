@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: triton-server
+  namespace: road-detection
+  labels:
+    app: triton-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: triton-server
+  template:
+    metadata:
+      labels:
+        app: triton-server
+    spec:
+      containers:
+      - name: triton-server
+        image: nvcr.io/nvidia/tritonserver:23.12-py3
+        volumeMounts:
+          - mountPath: /models
+            name: model-repository
+        ports:
+          - containerPort: 8000
+            name: http-triton
+          - containerPort: 8001
+            name: grpc-triton
+          - containerPort: 8002
+            name: metrics-triton
+        command:
+          - tritonserver
+          - --model-repository=/models
+          - --backend-config=tensorflow,version=2
+      volumes:
+        - name: model-repository
+          hostPath:
+            path: /home/joao/workspace/road_detection/Road_detection_CNN/triton/model_repository
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: triton-server-service
+  namespace: road-detection
+spec:
+  selector:
+    app: triton-server
+  ports:
+    - protocol: TCP
+      port: 8120
+      name: http
+      targetPort: 8000
+    - protocol: TCP
+      port: 8121
+      name: grpc
+      targetPort: 8001
+    - protocol: TCP
+      port: 8122
+      name: metrics
+      targetPort: 8002
+  type: LoadBalancer
