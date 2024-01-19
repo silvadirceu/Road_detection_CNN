@@ -17,6 +17,7 @@ rest: HttpHandler = Rest(API_URL)
 grpc_cv_client = Grpc_Client(COMPUTER_VISION_SERVICE, COMPUTER_VISION_PORT)
 controller = SendFileController(grpc_cv_client)
 
+labels = ['dirty', 'potholes', 'clean']
 
 def gui():
     st.title("Road Detection CNN")
@@ -24,11 +25,21 @@ def gui():
     uploaded_file = st.file_uploader(
         "Choose a image/video file", type=["mp4", "avi", "png", "jpg"]
     )
+
     if uploaded_file:
+        st.write("Processing Video please hold")
+
         bytes_data = uploaded_file.getvalue()
         file_info = FileInfo(uploaded_file.name, bytes_data)
+
+        # Assuming `controller.send` returns a gRPC response object
         response = controller.send(file_info)
-        st.write(response)
+        # Assuming the response has a predictions field
+        for prediction in response.predictions:
+            # Display each classification in the Streamlit app
+            st.write(f"Classification: {labels[int(prediction.classification)]}")
+
+        st.write("Processing complete.")
 
 
 if __name__ == "__main__":
