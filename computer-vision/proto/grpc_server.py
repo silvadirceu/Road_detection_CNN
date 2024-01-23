@@ -53,7 +53,7 @@ class GrpcServer(HttpServer):
             response = UploadVideoResponse(predictions=predictions)
             return response
 
-    def run(self, host="localhost", port="50051", max_workers=10):
+    async def run(self, host="localhost", port="50051", max_workers=10):
         options = [
             ("grpc.max_send_message_length", MAX_MESSAGE_LENGTH),
             ("grpc.max_receive_message_length", MAX_MESSAGE_LENGTH),
