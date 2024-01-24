@@ -6,7 +6,9 @@ message TritonPredictRequest{
 
 message TritonPredictResponse{
     string classification = 1;
-    string details = 2;
+    string frame_time = 2;
+    string latitude = 3;
+    string longitude = 4;
 }
 
 service TritonPredictService{

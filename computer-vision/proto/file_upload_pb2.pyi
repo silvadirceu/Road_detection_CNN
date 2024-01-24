@@ -12,12 +12,16 @@ class TritonPredictRequest(_message.Message):
     def __init__(self, chunk: _Optional[bytes] = ...) -> None: ...
 
 class TritonPredictResponse(_message.Message):
-    __slots__ = ("classification", "details")
+    __slots__ = ("classification", "frame_time", "latitude", "longitude")
     CLASSIFICATION_FIELD_NUMBER: _ClassVar[int]
-    DETAILS_FIELD_NUMBER: _ClassVar[int]
+    FRAME_TIME_FIELD_NUMBER: _ClassVar[int]
+    LATITUDE_FIELD_NUMBER: _ClassVar[int]
+    LONGITUDE_FIELD_NUMBER: _ClassVar[int]
     classification: str
-    details: str
-    def __init__(self, classification: _Optional[str] = ..., details: _Optional[str] = ...) -> None: ...
+    frame_time: str
+    latitude: str
+    longitude: str
+    def __init__(self, classification: _Optional[str] = ..., frame_time: _Optional[str] = ..., latitude: _Optional[str] = ..., longitude: _Optional[str] = ...) -> None: ...
 
 class UploadVideoRequest(_message.Message):
     __slots__ = ("chunk",)
