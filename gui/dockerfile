@@ -14,5 +14,7 @@ COPY . .
 
 EXPOSE 80
 
-ENTRYPOINT ["streamlit", "run", "main.py", "--server.port=80", "--server.address=0.0.0.0"]
+CMD celery -A main worker --loglevel=info & streamlit run main.py --server.port=80 --server.address=0.0.0.0
+
+# ENTRYPOINT ["streamlit", "run", "main.py", "--server.port=80", "--server.address=0.0.0.0"]
 
