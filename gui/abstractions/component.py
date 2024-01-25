@@ -2,6 +2,6 @@ import abc
 
 
 class Component(abc.ABC):
-    @abc.abstractclassmethod
+    @abc.abstractmethod
     def render(self):
         pass

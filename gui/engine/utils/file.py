@@ -8,15 +8,15 @@ DIR_OUT_PATH = "data"
 class FileInfo:
     def __init__(self, name: str, chunk: bytes, path=""):
         self.name = name
-        self.ext = os.path.basename(self.name).split(".")[-1]
+        self.format = os.path.basename(self.name).split(".")[-1]
         self.chunk = chunk
         self.path = path
 
 
 def video2image(file_info: FileInfo, step: int):
-    save_uploaded_file(file_info.ext, file_info.chunk)
+    save_uploaded_file(file_info.format, file_info.chunk)
 
-    cam = cv2.VideoCapture(os.path.join(DIR_OUT_PATH, f"dump." + file_info.ext))
+    cam = cv2.VideoCapture(os.path.join(DIR_OUT_PATH, f"dump." + file_info.format))
     current_frame = 0
     while True:
         ret, frame = cam.read()
@@ -32,8 +32,8 @@ def video2image(file_info: FileInfo, step: int):
 
 
 def image2bytes(file_info: FileInfo):
-    save_uploaded_file(file_info.ext, file_info.chunk)
-    img_array = cv2.imread(os.path.join(DIR_OUT_PATH, f"dump." + file_info.ext))
+    save_uploaded_file(file_info.format, file_info.chunk)
+    img_array = cv2.imread(os.path.join(DIR_OUT_PATH, f"dump." + file_info.format))
     return ndarray_to_bytes(img_array)
 
 
