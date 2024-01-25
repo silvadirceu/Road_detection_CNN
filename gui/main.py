@@ -55,10 +55,12 @@ def main():
                 marker = folium.CircleMarker(location=dirty_locations[i])
                 marker.add_to(map)
             marker.add_to(map)
-            st_data = st_folium(map, use_container_width=True, height=600, min_zoom=15)
+            st_data = st_folium(map, use_container_width=True, height=600)
         else:
             map = folium.Map(
-                location=all_locations[int(len(all_locations) / 2)], zoom_start=18
+                location=all_locations[int(len(all_locations) / 2)],
+                zoom_start=18,
+                min_zoom=15,
             )
             for i in range(7):
                 marker = folium.CircleMarker(location=all_locations[i])

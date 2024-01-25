@@ -6,8 +6,8 @@ class DisplayComponent(Component):
     def __init__(self):
         pass
 
-    def render(self, file_bytes, file_format: str):
+    def render(self, file_bytes, file_format: str, start_time=0):
         if file_format in ["mp4", "avi"]:
-            st.video(file_bytes)
+            st.video(file_bytes, start_time)
         else:
             st.image(file_bytes)

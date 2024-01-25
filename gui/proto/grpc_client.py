@@ -29,7 +29,7 @@ class GrpcClient(HttpHandler):
     
     def __send_image(self, chunk: bytes):
         message = file_upload_pb2.UploadImageRequest(chunk=chunk)
-        response = file_upload_pb2.UploadImageResponse()
+        response = None
         try:
             response:file_upload_pb2.UploadImageResponse = self.stub_image.UploadImage(message)
         except:
@@ -38,7 +38,7 @@ class GrpcClient(HttpHandler):
 
     def __send_video(self, chunk: bytes):
         message = file_upload_pb2.UploadVideoRequest(chunk=chunk)
-        response = file_upload_pb2.UploadVideoResponse()
+        response = None
         try:
             response:file_upload_pb2.UploadVideoResponse = self.stub_video.UploadVideo(message)
         except:
