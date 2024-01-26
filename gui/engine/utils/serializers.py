@@ -1,7 +1,16 @@
+import os
 import base64
 import json
 import numpy as np
 from engine.utils.bmsgpack import msgpack_to_obj, obj_to_msgpack
+
+#REVIEW: importing again due to circular import
+class FileInfo:
+    def __init__(self, name: str, chunk: bytes, path=""):
+        self.name = name
+        self.ext = os.path.basename(self.name).split(".")[-1]
+        self.chunk = chunk
+        self.path = path
 
 
 def ndarray_to_bytes(array: np.ndarray) -> bytes:
@@ -26,3 +35,29 @@ def read_all_bytes(filename):
     bytes = in_file.read()
     in_file.close()
     return bytes
+
+
+# TODO: will be removed
+def pre_celery_serialize(file_info):
+    chunk_base64 = base64.b64encode(file_info.chunk).decode("utf-8")
+    file_info_dict = {
+        "name": file_info.name,
+        "chunk": chunk_base64,  # Assuming chunk is bytes; convert to str
+        "path": file_info.path,
+    }
+    file_info_json = json.dumps(file_info_dict)
+    return file_info_json
+
+
+# TODO: will be removed
+def post_celery_serialize(file_info):
+    file_info_dict = json.loads(file_info)
+
+    # Decode base64-encoded chunk back to bytes
+    chunk_bytes = base64.b64decode(file_info_dict["chunk"])
+
+    # Create the original file_info object
+    original_file_info = FileInfo(
+        name=file_info_dict["name"], chunk=chunk_bytes, path=file_info_dict["path"]
+    )
+    return original_file_info
