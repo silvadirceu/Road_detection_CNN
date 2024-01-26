@@ -13,7 +13,7 @@ class FileInfo:
         self.path = path
 
 
-def video2image(file_info: FileInfo, step: int):
+def video2image(file_info: FileInfo, fps:int, step: int):
     save_uploaded_file(file_info)
     cam = cv2.VideoCapture(os.path.join(DIR_OUT_PATH, file_info.name))
     current_frame = 0
@@ -22,7 +22,7 @@ def video2image(file_info: FileInfo, step: int):
         if ret:
             if current_frame % step == 0:
                 current_frame += 1
-                yield ndarray_to_bytes(frame)
+                yield ndarray_to_bytes(frame), fps*current_frame
             current_frame += 1
         else:
             cam.release()

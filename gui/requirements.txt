@@ -5,3 +5,5 @@ python-dotenv==1.0.0
 opencv-python==4.9.0.80
 msgpack==1.0.7
 msgpack_numpy==0.4.8
+streamlit_folium
+geopy
