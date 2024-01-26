@@ -32,7 +32,7 @@ class StylesComponent(Component):
     __drag_and_drop_background_color = """
             <style>
                 section[data-testid="stFileUploadDropzone"]{
-                    background-color: rgb(38, 57, 74);
+                    background-color: rgb(186, 247, 216);
                     border: solid;
                     border-color: rgb(99, 185, 128);
                 }
