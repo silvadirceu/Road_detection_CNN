@@ -2,7 +2,7 @@ version: '3'
 
 services:
   gui:
-    image: road-detection-gui:v0.1.1
+    image: road-detection-gui:v0.1.2
     container_name: gui
     build:
       context: ./gui
@@ -14,7 +14,7 @@ services:
       - road_detection_network
 
   computer-vision:
-    image: road-detection-computer-vision:v0.1.1
+    image: road-detection-computer-vision:v0.1.2
     container_name: ${COMPUTER_VISION_SERVICE}
     build:
       context: ./computer-vision
