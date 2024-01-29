@@ -2,7 +2,7 @@ version: '3'
 
 services:
   gui:
-    image: road-detection-gui:v0.1.2
+    image: road-detection-gui:${VERSION}
     container_name: gui
     build:
       context: ./gui
@@ -14,12 +14,12 @@ services:
       - road_detection_network
 
   computer-vision:
-    image: road-detection-computer-vision:v0.1.2
+    image: road-detection-computer-vision:${VERSION}
     container_name: ${COMPUTER_VISION_SERVICE}
     build:
       context: ./computer-vision
     ports:
-      - ${COMPUTER_VISION_PORT}:80
+      - ${COMPUTER_VISION_PORT}:8080
     env_file:
       - .env
     networks:
@@ -33,20 +33,6 @@ services:
   #   networks:
   #    - road_detection_network
 
-  rabbitmq:
-    container_name: rabbitmq
-    hostname: ${RABBITMQ_SERVER}
-    image: "rabbitmq:3.7-management"
-    restart: always
-    ports:
-      - ${RABBITMQ_PORT}:5672
-      - ${RABBITMQ_ADMIN_PORT}:15672
-    environment:
-      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
-      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
-    networks:
-      - road_detection_network
-    
   triton-server:
     image: nvcr.io/nvidia/tritonserver:23.12-py3
     container_name: ${TRITON_SERVICE}
@@ -63,8 +49,23 @@ services:
     networks:
       - road_detection_network
 
+  rabbitmq:
+    container_name: rabbitmq
+    hostname: ${RABBITMQ_SERVER}
+    image: "rabbitmq:3.7-management"
+    restart: always
+    ports:
+      - ${RABBITMQ_PORT}:5672
+      - ${RABBITMQ_ADMIN_PORT}:15672
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
+    networks:
+      - road_detection_network
+
   flower:
     image: mher/flower
+    container_name: flower
     environment:
       CELERY_BROKER_URL: amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@${RABBITMQ_SERVER}:${RABBITMQ_PORT}
       CELERY_RESULT_BACKEND: rpc://

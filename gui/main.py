@@ -1,92 +1,98 @@
-import os
-import time
+import folium
 import streamlit as st
-from dotenv import load_dotenv
-from abstractions.controller import Controller
-from controllers.send_file_controller import FileInfo, SendFileController
-from engine.protocols.rest import Rest
-from abstractions.http_handler import HttpHandler
-from proto.grpc_client import Grpc_Client
-from services.settings import *
+from streamlit_folium import st_folium
 from services.celeryconfig import celery_app
-from engine.tasks import process_file_task, get_result
-from engine.utils.serializers import pre_celery_serialize
+from components.report_features_checkbox import ReportFeatureCheckbox
+from components import components as st_components
+from services.services import geolocator, send_file_controller
+from PIL import Image
 
-rest: HttpHandler = Rest(API_URL)
-grpc_cv_client = Grpc_Client(COMPUTER_VISION_SERVICE, COMPUTER_VISION_PORT)
-controller = SendFileController(grpc_cv_client)
+from services.settings import *
 
-labels = ["dirty", "potholes", "clean"]
+potholes_locations = [
+    [-7.56074, -35.01794],
+    [-7.56072, -35.01800],
+    [-7.56068, -35.01807],
+    [-7.56064, -35.01814],
+]
+dirty_locations = [[-7.56054, -35.01828], [-7.56050, -35.01837], [-7.56044, -35.01846]]
+all_locations = potholes_locations + dirty_locations
 
-import json
-import base64
-
-
-def process_file(file_info):
-    # Send the file processing task to Celery
-    # TODO: Handle serialization from source
-    file_info_json = pre_celery_serialize(file_info)
-    result = process_file_task.delay(file_info_json)
-    return result.id
-
-
-def display_dev_options():
-    st.sidebar.subheader("Developer Environment")
-
-    task_id_input = st.sidebar.text_input("Debug Task ID:", value="")
-    if st.sidebar.button("Get Result"):
-        if task_id_input:
-            # Get the result using the provided task_id
-            result = get_result(task_id_input)
-            # Display the result
-            if result is not None:
-                st.sidebar.write(f"Task ID: {task_id_input}")
-                st.sidebar.write("Result:")
-                st.sidebar.write(result)
-            else:
-                st.sidebar.write(f"No result available for Task ID: {task_id_input}")
-        else:
-            st.sidebar.write("Please enter a valid Task ID.")
-
-    for key, value in os.environ.items():
-        st.sidebar.text(f"{key}: {value}")
-
-def gui():
+def main():
     st.set_page_config(
-        page_title="Road Scanner",
+        page_title="Road Condition",
         page_icon="",
         layout="wide",
     )
-    st.title("Road Detection CNN")
+    st_components.styles()
+    st.title("Road Condition")
+    with st.sidebar:
+        logo = Image.open("assets/logo.png")
+        st.image(logo)
+        st.divider()
 
-    if DEBUG:
-        display_dev_options()
-
-    with st.form("upload-form", clear_on_submit=True):
-        file = st.file_uploader(
-            "Choose a video file", type=["mp4", "avi", "png", "jpg"]
+        st.header("Load Data")
+        upload_response, file_bytes, file_format = st_components.upload_file(
+            send_file_controller.send
         )
-        submitted = st.form_submit_button("Upload")
 
-    response_container = st.empty()
+        st.header("Data Analysis")
+        report_features = st_components.report_features(
+            [ReportFeatureCheckbox(f"Potholes"), ReportFeatureCheckbox(f"Dirty")],
+            bool(upload_response),
+        )
 
-    if submitted and file is not None:
-        response_container.empty()  # clear response container
-        bytes_data = file.getvalue()
-        file_info = FileInfo(file.name, bytes_data)
-        task_id = process_file(file_info)
+    col1, col2 = st.columns([1, 1])
+    with col1:
+        if not report_features[0].checked and not report_features[1].checked:
+            map = folium.Map(location=potholes_locations[0], zoom_start=18, min_zoom=15)
+            st_data = st_folium(map, use_container_width=True, height=600)
+        elif report_features[0].checked and not report_features[1].checked:
+            map = folium.Map(location=potholes_locations[0], zoom_start=18, min_zoom=15)
+            for i in range(4):
+                marker = folium.CircleMarker(location=potholes_locations[i])
+                marker.add_to(map)
+            st_data = st_folium(map, use_container_width=True, height=600)
+        elif not report_features[0].checked and report_features[1].checked:
+            map = folium.Map(location=dirty_locations[0], zoom_start=18, min_zoom=15)
+            for i in range(3):
+                marker = folium.CircleMarker(location=dirty_locations[i])
+                marker.add_to(map)
+            marker.add_to(map)
+            st_data = st_folium(map, use_container_width=True, height=600)
+        else:
+            map = folium.Map(
+                location=all_locations[int(len(all_locations) / 2)],
+                zoom_start=18,
+                min_zoom=15,
+            )
+            for i in range(7):
+                marker = folium.CircleMarker(location=all_locations[i])
+                marker.add_to(map)
+            marker.add_to(map)
+            st_data = st_folium(map, use_container_width=True, height=600)
 
-        with response_container:
-            st.write("Processing Video please hold")
-            # st.write(get_result(task_id=task_id))
-            while True:
-                result = get_result(task_id=task_id)
-                if result:
-                    st.write(result)
-                    break
-                time.sleep(4)
-        # st.rerun()  # Uncomment to batch test requests
+    with col2:
+        address = geolocator.adress(-7.56074, -35.01794)
+        street = address.split(",")[0] or None
+        with st.container():
+            st_components.table(
+                ["Street", "Pothole", "Dirty", "Latitude", "Longitude"],
+                [
+                    [
+                        street,
+                        i < 4,
+                        i >= 4,
+                        all_locations[i][0],
+                        all_locations[i][1],
+                    ]
+                    for i in range(0, 7)
+                ],
+            )
+        with st.container():
+            if upload_response:
+                st_components.display(file_bytes, file_format)
 
 
 if __name__ == "__main__":
-    gui()
+    main()

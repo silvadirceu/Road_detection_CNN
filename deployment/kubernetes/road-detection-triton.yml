@@ -36,26 +36,26 @@ spec:
         - name: model-repository
           hostPath:
             path: /home/joao/workspace/road_detection/Road_detection_CNN/triton/model_repository
-# ---
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: triton-server-service
-#   namespace: road-detection
-# spec:
-#   selector:
-#     app: triton-server
-#   ports:
-#     - protocol: TCP
-#       port: 8120
-#       name: http
-#       targetPort: 8000
-#     - protocol: TCP
-#       port: 8121
-#       name: grpc
-#       targetPort: 8001
-#     - protocol: TCP
-#       port: 8122
-#       name: metrics
-#       targetPort: 8002
-#   type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: triton-server-service
+  namespace: road-detection
+spec:
+  selector:
+    app: triton-server
+  ports:
+    - protocol: TCP
+      port: 8120
+      name: http
+      targetPort: 8000
+    - protocol: TCP
+      port: 8121
+      name: grpc
+      targetPort: 8001
+    - protocol: TCP
+      port: 8122
+      name: metrics
+      targetPort: 8002
+  type: LoadBalancer

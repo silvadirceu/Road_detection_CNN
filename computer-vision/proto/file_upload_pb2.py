@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x11\x66ile_upload.proto\"%\n\x14TritonPredictRequest\x12\r\n\x05\x63hunk\x18\x01 \x01(\x0c\"@\n\x15TritonPredictResponse\x12\x16\n\x0e\x63lassification\x18\x01 \x01(\t\x12\x0f\n\x07\x64\x65tails\x18\x02 \x01(\t\"#\n\x12UploadVideoRequest\x12\r\n\x05\x63hunk\x18\x01 \x01(\x0c\"B\n\x13UploadVideoResponse\x12+\n\x0bpredictions\x18\x01 \x03(\x0b\x32\x16.TritonPredictResponse\"#\n\x12UploadImageRequest\x12\r\n\x05\x63hunk\x18\x01 \x01(\x0c\"A\n\x13UploadImageResponse\x12*\n\nprediction\x18\x01 \x01(\x0b\x32\x16.TritonPredictResponse2V\n\x14TritonPredictService\x12>\n\rTritonPredict\x12\x15.TritonPredictRequest\x1a\x16.TritonPredictResponse2N\n\x12UploadVideoService\x12\x38\n\x0bUploadVideo\x12\x13.UploadVideoRequest\x1a\x14.UploadVideoResponse2N\n\x12UploadImageService\x12\x38\n\x0bUploadImage\x12\x13.UploadImageRequest\x1a\x14.UploadImageResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x11\x66ile_upload.proto\"%\n\x14TritonPredictRequest\x12\r\n\x05\x63hunk\x18\x01 \x01(\x0c\"h\n\x15TritonPredictResponse\x12\x16\n\x0e\x63lassification\x18\x01 \x01(\t\x12\x12\n\nframe_time\x18\x02 \x01(\t\x12\x10\n\x08latitude\x18\x03 \x01(\t\x12\x11\n\tlongitude\x18\x04 \x01(\t\"#\n\x12UploadVideoRequest\x12\r\n\x05\x63hunk\x18\x01 \x01(\x0c\"B\n\x13UploadVideoResponse\x12+\n\x0bpredictions\x18\x01 \x03(\x0b\x32\x16.TritonPredictResponse\"#\n\x12UploadImageRequest\x12\r\n\x05\x63hunk\x18\x01 \x01(\x0c\"A\n\x13UploadImageResponse\x12*\n\nprediction\x18\x01 \x01(\x0b\x32\x16.TritonPredictResponse2V\n\x14TritonPredictService\x12>\n\rTritonPredict\x12\x15.TritonPredictRequest\x1a\x16.TritonPredictResponse2N\n\x12UploadVideoService\x12\x38\n\x0bUploadVideo\x12\x13.UploadVideoRequest\x1a\x14.UploadVideoResponse2N\n\x12UploadImageService\x12\x38\n\x0bUploadImage\x12\x13.UploadImageRequest\x1a\x14.UploadImageResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -24,19 +24,19 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _globals['_TRITONPREDICTREQUEST']._serialized_start=21
   _globals['_TRITONPREDICTREQUEST']._serialized_end=58
   _globals['_TRITONPREDICTRESPONSE']._serialized_start=60
-  _globals['_TRITONPREDICTRESPONSE']._serialized_end=124
-  _globals['_UPLOADVIDEOREQUEST']._serialized_start=126
-  _globals['_UPLOADVIDEOREQUEST']._serialized_end=161
-  _globals['_UPLOADVIDEORESPONSE']._serialized_start=163
-  _globals['_UPLOADVIDEORESPONSE']._serialized_end=229
-  _globals['_UPLOADIMAGEREQUEST']._serialized_start=231
-  _globals['_UPLOADIMAGEREQUEST']._serialized_end=266
-  _globals['_UPLOADIMAGERESPONSE']._serialized_start=268
-  _globals['_UPLOADIMAGERESPONSE']._serialized_end=333
-  _globals['_TRITONPREDICTSERVICE']._serialized_start=335
-  _globals['_TRITONPREDICTSERVICE']._serialized_end=421
-  _globals['_UPLOADVIDEOSERVICE']._serialized_start=423
-  _globals['_UPLOADVIDEOSERVICE']._serialized_end=501
-  _globals['_UPLOADIMAGESERVICE']._serialized_start=503
-  _globals['_UPLOADIMAGESERVICE']._serialized_end=581
+  _globals['_TRITONPREDICTRESPONSE']._serialized_end=164
+  _globals['_UPLOADVIDEOREQUEST']._serialized_start=166
+  _globals['_UPLOADVIDEOREQUEST']._serialized_end=201
+  _globals['_UPLOADVIDEORESPONSE']._serialized_start=203
+  _globals['_UPLOADVIDEORESPONSE']._serialized_end=269
+  _globals['_UPLOADIMAGEREQUEST']._serialized_start=271
+  _globals['_UPLOADIMAGEREQUEST']._serialized_end=306
+  _globals['_UPLOADIMAGERESPONSE']._serialized_start=308
+  _globals['_UPLOADIMAGERESPONSE']._serialized_end=373
+  _globals['_TRITONPREDICTSERVICE']._serialized_start=375
+  _globals['_TRITONPREDICTSERVICE']._serialized_end=461
+  _globals['_UPLOADVIDEOSERVICE']._serialized_start=463
+  _globals['_UPLOADVIDEOSERVICE']._serialized_end=541
+  _globals['_UPLOADIMAGESERVICE']._serialized_start=543
+  _globals['_UPLOADIMAGESERVICE']._serialized_end=621
 # @@protoc_insertion_point(module_scope)

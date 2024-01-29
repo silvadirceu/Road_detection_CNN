@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: road-detection-computer-vision
-        image: api.innovox.ai/road-detection-computer-vision:v0.1.1
+        image: registry.innovox.ai/road-detection-computer-vision:v0.1.4
         imagePullPolicy: IfNotPresent
         env:
         # Define the environment variable
@@ -55,7 +55,8 @@ spec:
   selector:
     app: road-detection-computer-vision
   ports:
-    - name: road-detection-computer-vision
+    - name: road-detection-computer-vision-service
       port: 8080
-      targetPort: 80
-  type: ClusterIP
+      targetPort: 8080
+      nodePort: 30358
+  type: NodePort

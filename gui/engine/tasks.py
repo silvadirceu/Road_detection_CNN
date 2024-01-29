@@ -1,30 +1,17 @@
 # tasks.py
 from celery.result import AsyncResult
-from controllers.send_file_controller import SendFileController
-from engine.protocols.rest import Rest
-from abstractions.http_handler import HttpHandler
-from proto.grpc_client import Grpc_Client
 from services.celeryconfig import celery_app
 from services.settings import *
 from engine.utils.serializers import post_celery_serialize
+from services.services import send_file_controller
 
-
-
-rest: HttpHandler = Rest(API_URL)
-grpc_cv_client = Grpc_Client(COMPUTER_VISION_SERVICE, COMPUTER_VISION_PORT)
-controller = SendFileController(grpc_cv_client)
-
-labels = ["dirty", "potholes", "clean"]
-
-@celery_app.task
+labels = ["dirty", "potholes", "clean"]@celery_app.task
 def process_file_task(file_info):
-    # Assume you have received file_info_json
-
     # TODO: will be removed
     original_file_info = post_celery_serialize(file_info)
 
     # Perform the file processing logic here
-    response = controller.send(original_file_info)
+    response = send_file_controller.send(original_file_info)
     predictions = response.predictions  # list of prediction objects
     results = []
     for prediction in predictions:

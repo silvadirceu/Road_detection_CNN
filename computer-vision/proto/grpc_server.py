@@ -31,10 +31,13 @@ class GrpcServer(HttpServer):
             file_info = FileInfo("dump", request.chunk)
             img_array_bytes = image2bytes(file_info)
             triton_grpc_response = self.triton_client.send(img_array_bytes)
-            triton_response = TritonPredictResponse(classification=triton_grpc_response, details="not available yet")
-            response = UploadImageResponse(
-                prediction=triton_response
+            triton_response = TritonPredictResponse(
+                classification=triton_grpc_response,
+                frame_time="1",
+                latitude="1",
+                longitude="1",
             )
+            response = UploadImageResponse(prediction=triton_response)
             return response
 
     class __UploadVideoService(file_upload_pb2_grpc.UploadVideoServiceServicer):
@@ -44,11 +47,16 @@ class GrpcServer(HttpServer):
 
         def UploadVideo(self, request: UploadVideoRequest, context: ServicerContext):
             file_info = FileInfo("dump", request.chunk)
-            frames_generator = video2image(file_info, 20)
+            frames_generator = video2image(file_info, fps=30, step=20)
             predictions = []
-            for frame_byte in frames_generator:
+            for frame_byte, frame_time in frames_generator:
                 triton_grpc_response = self.triton_client.send(frame_byte)
-                triton_response = TritonPredictResponse(classification=triton_grpc_response, details="not available yet")
+                triton_response = TritonPredictResponse(
+                    classification=triton_grpc_response,
+                    frame_time=str(frame_time),
+                    latitude="1",
+                    longitude="1",
+                )
                 predictions.append(triton_response)
             response = UploadVideoResponse(predictions=predictions)
             return response

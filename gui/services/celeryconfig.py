@@ -10,11 +10,6 @@ celery_conf["task_serializer"] = CELERY_TASK_SERIALIZER
 celery_conf["result_serializer"] = CELERY_RESULT_SERIALIZER
 celery_conf["accept_content"] = CELERY_ACCEPT_CONTENT
 
-celery_app.autodiscover_tasks(["engine"])
+celery_app.autodiscover_tasks(["controllers"])
 
 celery_app.conf.update(celery_conf)
-
-# celery_app.conf.task_routes = {
-#     # Celery App route configuration (starting on config.celery_app.py)
-#     "process_file_task": {"queue": "qroad-detection"},
-# }

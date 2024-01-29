@@ -8,10 +8,9 @@ from engine.utils.bmsgpack import msgpack_to_obj, obj_to_msgpack
 class FileInfo:
     def __init__(self, name: str, chunk: bytes, path=""):
         self.name = name
-        self.ext = os.path.basename(self.name).split(".")[-1]
+        self.format = os.path.basename(self.name).split(".")[-1]
         self.chunk = chunk
         self.path = path
-
 
 def ndarray_to_bytes(array: np.ndarray) -> bytes:
     return obj_to_msgpack(array)
@@ -37,13 +36,14 @@ def read_all_bytes(filename):
     return bytes
 
 
-# TODO: will be removed
-def pre_celery_serialize(file_info):
-    chunk_base64 = base64.b64encode(file_info.chunk).decode("utf-8")
+
+def json_celery_serializer(file_info):
+    file_bytes = file_info.getvalue()
+    chunk_base64 = base64.b64encode(file_bytes).decode('utf-8')
     file_info_dict = {
         "name": file_info.name,
-        "chunk": chunk_base64,  # Assuming chunk is bytes; convert to str
-        "path": file_info.path,
+        "chunk": chunk_base64, 
+        "path": "",
     }
     file_info_json = json.dumps(file_info_dict)
     return file_info_json
