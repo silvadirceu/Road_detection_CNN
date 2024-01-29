@@ -1,0 +1,8 @@
+grpcio==1.60.0
+grpcio-tools==1.60.0
+msgpack==1.0.7
+msgpack_numpy==0.4.8
+opencv-python==4.9.0.80
+python-dotenv==1.0.0
+tritonclient[grpc]==2.41.1
+scikit-image==0.22.0

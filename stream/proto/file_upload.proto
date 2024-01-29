@@ -1,0 +1,41 @@
+syntax="proto3";
+
+message TritonPredictRequest{
+    bytes chunk = 1;
+}
+
+message TritonPredictResponse{
+    string classification = 1;
+    string frame_time = 2;
+    string latitude = 3;
+    string longitude = 4;
+}
+
+service TritonPredictService{
+    rpc TritonPredict(TritonPredictRequest) returns (TritonPredictResponse);
+}
+
+message UploadVideoRequest{
+    bytes chunk = 1;
+}
+
+message UploadVideoResponse{
+    repeated TritonPredictResponse predictions = 1;
+}
+
+service UploadVideoService{
+    rpc UploadVideo(UploadVideoRequest) returns (UploadVideoResponse);
+}
+
+message UploadImageRequest{
+    bytes chunk = 1;
+}
+
+message UploadImageResponse{
+    TritonPredictResponse prediction = 1;
+}
+
+service UploadImageService{
+    rpc UploadImage(UploadImageRequest) returns (UploadImageResponse);
+}
+
