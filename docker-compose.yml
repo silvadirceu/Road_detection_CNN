@@ -74,7 +74,7 @@ services:
       - ${FLOWER_PORT}:${FLOWER_PORT}
     depends_on:
       - rabbitmq
-      # - gui
+      - gui
     networks:
       - road_detection_network
 
