@@ -21,7 +21,7 @@ cp .env.example .env
 docker-compose -f docker-compose.yml
 ```
 
-3. Monitoring
-Monitoring services are listed:
+4. Monitoring
+Monitoring services are listed (ports defined on .env):
 - RabbitMQ - Port: 15672
 - Flower - Port: 5555
