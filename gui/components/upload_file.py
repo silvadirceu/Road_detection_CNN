@@ -2,11 +2,11 @@ import os
 from typing import Any, Callable, List
 import streamlit as st
 from abstractions.component import Component
-from engine.utils.file import FileInfo
 from proto.file_upload_pb2 import UploadVideoResponse
 from streamlit.runtime.uploaded_file_manager import UploadedFile
-from engine.utils.serializers import json_celery_serializer
-from controllers.tasks_controller import process_file_task
+from controllers.tasks_controller import process_task
+from engine.utils.schemas import FileInfo
+
 
 class UploadFileComponent(Component):
     def __init__(self):
@@ -18,14 +18,22 @@ class UploadFileComponent(Component):
         self, send_file_handler: Callable[[FileInfo], any], uploaded_file: UploadedFile
     ):
         if uploaded_file:
-            #TODO: Review serialization pipeline
-            json_data = json_celery_serializer(uploaded_file)
-            self.upload_response: UploadVideoResponse = process_file_task.delay(json_data)
+            # TODO: Review serialization pipeline
+            file_info = FileInfo(
+                name=uploaded_file.name,
+                chunk=uploaded_file.getvalue(),
+                path="",
+            )
             
-            self.file_bytes = uploaded_file.getvalue()
-            self.file_format = os.path.basename(uploaded_file.name).split(".")[-1]
+            #cant serialize method send_file_handler()
+            self.upload_response: UploadVideoResponse = (
+                process_task.delay(file_info.to_dict())
+            )
 
-    def render(self, send_file_handler: Callable[[FileInfo], any]):        
+            self.file_bytes = file_info.chunk
+            self.file_format = file_info.format
+
+    def render(self, send_file_handler: Callable[[FileInfo], any]):
         uploaded_file = st.file_uploader(
             "Choose a image/video file",
             type=["mp4", "avi", "png", "jpg"],
