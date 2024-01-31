@@ -4,9 +4,9 @@ metadata:
   name: road-detection-config
   namespace: road-detection
 data:
-  DEV: "True"
+  DEBUG: "True"
   COMPUTER_VISION_GUI_PORT: "8501"
-  COMPUTER_VISION_PORT: "80"
+  COMPUTER_VISION_PORT: "8080"
   TRITON_HTTP_PORT: "8120"
   TRITON_GRPC_PORT: "8121"
   TRITON_METRICS_PORT: "8122"

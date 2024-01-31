@@ -1,9 +1,11 @@
+import os
 from typing import Any, Callable, List
 import streamlit as st
 from abstractions.component import Component
-from engine.utils.file import FileInfo
 from proto.file_upload_pb2 import UploadVideoResponse
 from streamlit.runtime.uploaded_file_manager import UploadedFile
+from controllers.tasks_controller import process_task
+from engine.utils.schemas import FileInfo
 
 
 class UploadFileComponent(Component):
@@ -16,9 +18,19 @@ class UploadFileComponent(Component):
         self, send_file_handler: Callable[[FileInfo], any], uploaded_file: UploadedFile
     ):
         if uploaded_file:
-            self.file_bytes: bytes = uploaded_file.getvalue()
-            file_info = FileInfo(uploaded_file.name, self.file_bytes)
-            self.upload_response: UploadVideoResponse = send_file_handler(file_info)
+            # TODO: Review serialization pipeline
+            file_info = FileInfo(
+                name=uploaded_file.name,
+                chunk=uploaded_file.getvalue(),
+                path="",
+            )
+            
+            #cant serialize method send_file_handler()
+            self.upload_response: UploadVideoResponse = (
+                process_task.delay(file_info.to_dict())
+            )
+
+            self.file_bytes = file_info.chunk
             self.file_format = file_info.format
 
     def render(self, send_file_handler: Callable[[FileInfo], any]):

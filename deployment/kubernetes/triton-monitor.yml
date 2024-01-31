@@ -15,4 +15,4 @@
     podMetricsEndpoints:
       - port: metrics-triton
         interval: 10s
-        path: /metrics 
+        path: /metrics

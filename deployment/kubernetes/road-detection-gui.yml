@@ -3,24 +3,19 @@ kind: Deployment
 metadata:
   name: road-detection-gui-deployment
   namespace: road-detection
-  labels:
-    app: road-detection-gui-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: road-detection-gui
-  template:
-    metadata:
-      labels:
-        app: road-detection-gui
     spec:
       containers:
       - name: road-detection-gui
-        image: api.innovox.ai/road-detection-gui:v0.1.1
+        image: registry.innovox.ai/road-detection-gui:v0.1.3
         imagePullPolicy: IfNotPresent
+        imagePullSecrets:
+          - name: innovox-registry
         env:
-        # Define the environment variable
         - name: COMPUTER_VISION_GUI_PORT
           valueFrom:
             configMapKeyRef:
@@ -36,8 +31,7 @@ spec:
             configMapKeyRef:
               name: road-detection-config
               key: COMPUTER_VISION_PORT     
-      imagePullSecrets:
-        - name: innovox-registry
+
 ---
 apiVersion: v1
 kind: Service
