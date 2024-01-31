@@ -1,0 +1,46 @@
+syntax="proto3";
+package requests;
+
+message FileRequest{
+    bytes chunk = 1;
+}
+
+message TritonPredictResponse{
+    string classification = 1;
+    string frame_time = 2;
+    string latitude = 3;
+    string longitude = 4;
+}
+
+service TritonPredictService{
+    rpc Predict(FileRequest) returns (TritonPredictResponse);
+}
+
+message VideoPredictResponse{
+    repeated TritonPredictResponse predictions = 1;
+}
+
+service VideoPredictService{
+    rpc Predict(FileRequest) returns (VideoPredictResponse);
+}
+
+message ImagePredictResponse{
+    TritonPredictResponse predictions = 1;
+}
+
+service ImagePredictService{
+    rpc Predict(FileRequest) returns (ImagePredictResponse);
+}
+
+message ImageDataOCrResponse{
+    string latitude = 1;
+    string longitude = 2;
+    string datetime = 3;
+    string speed = 4;
+}
+
+service ImageDataOcrService{
+    rpc Predict(FileRequest) returns (ImageDataOCrResponse);
+}
+
+

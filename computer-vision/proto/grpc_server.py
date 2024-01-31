@@ -3,13 +3,12 @@ import grpc
 from grpc import ServicerContext
 from abstractions.http_client import HttpClient
 from abstractions.http_server import HttpServer
-from proto import file_upload_pb2_grpc
-from proto.file_upload_pb2 import (
+from proto import requests_pb2_grpc
+from proto.requests_pb2 import (
     TritonPredictResponse,
-    UploadImageRequest,
-    UploadVideoRequest,
-    UploadImageResponse,
-    UploadVideoResponse,
+    FileRequest,
+    ImagePredictResponse,
+    VideoPredictResponse,
 )
 from proto.triton_client import TritonClient
 from utils.file import FileInfo, image2bytes, video2image
@@ -22,12 +21,12 @@ class GrpcServer(HttpServer):
         self.triton_client = http_client
         pass
 
-    class __UploadImageService(file_upload_pb2_grpc.UploadImageServiceServicer):
+    class __ImagePredictService(requests_pb2_grpc.ImagePredictServiceServicer):
         def __init__(self, triton_client: TritonClient):
             self.triton_client = triton_client
             pass
 
-        def UploadImage(self, request: UploadImageRequest, context: ServicerContext):
+        def UploadImage(self, request: FileRequest, context: ServicerContext):
             file_info = FileInfo("dump", request.chunk)
             img_array_bytes = image2bytes(file_info)
             triton_grpc_response = self.triton_client.send(img_array_bytes)
@@ -37,15 +36,15 @@ class GrpcServer(HttpServer):
                 latitude="1",
                 longitude="1",
             )
-            response = UploadImageResponse(prediction=triton_response)
+            response = ImagePredictResponse(prediction=triton_response)
             return response
 
-    class __UploadVideoService(file_upload_pb2_grpc.UploadVideoServiceServicer):
+    class __VideoPredictService(requests_pb2_grpc.VideoPredictServiceServicer):
         def __init__(self, triton_client: TritonClient):
             self.triton_client = triton_client
             pass
 
-        def UploadVideo(self, request: UploadVideoRequest, context: ServicerContext):
+        def UploadVideo(self, request: FileRequest, context: ServicerContext):
             file_info = FileInfo("dump", request.chunk)
             frames_generator = video2image(file_info, fps=30, step=20)
             predictions = []
@@ -58,7 +57,7 @@ class GrpcServer(HttpServer):
                     longitude="1",
                 )
                 predictions.append(triton_response)
-            response = UploadVideoResponse(predictions=predictions)
+            response = VideoPredictResponse(predictions=predictions)
             return response
 
     def run(self, host="localhost", port="50051", max_workers=10):
@@ -70,11 +69,11 @@ class GrpcServer(HttpServer):
             futures.ThreadPoolExecutor(max_workers=max_workers), options=options
         )
 
-        file_upload_pb2_grpc.add_UploadImageServiceServicer_to_server(
-            self.__UploadImageService(self.triton_client), server
+        requests_pb2_grpc.add_ImagePredictServiceServicer_to_server(
+            self.__ImagePredictService(self.triton_client), server
         )
-        file_upload_pb2_grpc.add_UploadVideoServiceServicer_to_server(
-            self.__UploadVideoService(self.triton_client), server
+        requests_pb2_grpc.add_VideoPredictServiceServicer_to_server(
+            self.__VideoPredictService(self.triton_client), server
         )
 
         server.add_insecure_port(f"{host}:{port}")
