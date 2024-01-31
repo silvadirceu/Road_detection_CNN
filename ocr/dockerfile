@@ -1,0 +1,16 @@
+FROM python:3.9
+
+WORKDIR /app
+
+RUN apt-get update && apt-get -y install golang-go 
+RUN apt install -y protobuf-compiler
+
+COPY requirements.txt .
+
+RUN pip install -r requirements.txt
+
+COPY . .
+
+EXPOSE 80
+
+CMD ["python", "-u", "main.py"]
