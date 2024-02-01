@@ -20,7 +20,7 @@ spec:
             - containerPort: 5555
           env:
             - name: CELERY_BROKER_URL
-              value: "amqp://mqadmin:Admin123XX_@$rabbit:15672"
+              value: "amqp://mqadmin:Admin123XX_@rabbitmq-server:5672"
             - name: CELERY_RESULT_BACKEND
               value: "rpc://"
           resources:
