@@ -6,7 +6,7 @@ metadata:
   namespace: road-detection
   annotations:
     kubernetes.io/ingress.class: traefik
-    traefik.ingress.kubernetes.io/middleware: road-detection-mw-admin@kubernetescrd
+    traefik.ingress.kubernetes.io/prefix: "/flower"
 spec:
   tls:
   - hosts:
@@ -23,3 +23,12 @@ spec:
               name: road-detection-gui-service 
               port:
                 number: 80
+# ---
+# apiVersion: traefik.io/v1alpha1
+# kind: Middleware
+# metadata:
+#   name: stripprefix
+#   namespace: road-detection
+# spec:
+#   replacePath:
+#     path: /flower

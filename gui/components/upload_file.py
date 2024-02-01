@@ -18,7 +18,6 @@ class UploadFileComponent(Component):
         self, send_file_handler: Callable[[FileInfo], any], uploaded_file: UploadedFile
     ):
         if uploaded_file:
-            # TODO: Review serialization pipeline
             file_info = FileInfo(
                 name=uploaded_file.name,
                 chunk=uploaded_file.getvalue(),

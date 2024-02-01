@@ -8,30 +8,20 @@ spec:
   selector:
     matchLabels:
       app: road-detection-gui
+  template:
+    metadata:
+      labels:
+        app: road-detection-gui
     spec:
+      imagePullSecrets:
+        - name: innovox-registry
       containers:
       - name: road-detection-gui
         image: registry.innovox.ai/road-detection-gui:v0.1.3
         imagePullPolicy: IfNotPresent
-        imagePullSecrets:
-          - name: innovox-registry
-        env:
-        - name: COMPUTER_VISION_GUI_PORT
-          valueFrom:
-            configMapKeyRef:
-              name: road-detection-config
-              key: COMPUTER_VISION_GUI_PORT
-        - name: COMPUTER_VISION_SERVICE
-          valueFrom:
-            configMapKeyRef:
-              name: road-detection-config
-              key: COMPUTER_VISION_SERVICE
-        - name: COMPUTER_VISION_PORT
-          valueFrom:
-            configMapKeyRef:
-              name: road-detection-config
-              key: COMPUTER_VISION_PORT     
-
+        envFrom:
+        - configMapRef:
+            name: road-detection-config
 ---
 apiVersion: v1
 kind: Service
