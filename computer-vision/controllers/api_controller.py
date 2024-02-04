@@ -1,60 +1,66 @@
 from concurrent import futures
+from io import BytesIO
+import pickle
 import grpc
 from grpc import ServicerContext
 from abstractions.http_client import HttpClient
 from abstractions.http_server import HttpServer
 from proto import requests_pb2_grpc
+from controllers.ocr_controller import OcrController
 from proto.requests_pb2 import (
     TritonPredictResponse,
     FileRequest,
     ImagePredictResponse,
     VideoPredictResponse,
 )
-from proto.triton_client import TritonClient
-from utils.file import FileInfo, image2bytes, video2image
+from controllers.triton_controller import TritonController
+from utils.file import FileInfo, video2image
+from utils.image import Image, ImageUtils
 
 MAX_MESSAGE_LENGTH = 200 * 1024 * 1024
 
 
-class GrpcServer(HttpServer):
-    def __init__(self, http_client: HttpClient):
-        self.triton_client = http_client
-        pass
+class ApiController(HttpServer):
+    def __init__(self, triton_controller: HttpClient, ocr_controller: OcrController):
+        self.triton_client = triton_controller
+        self.ocr_client = ocr_controller
 
     class __ImagePredictService(requests_pb2_grpc.ImagePredictServiceServicer):
-        def __init__(self, triton_client: TritonClient):
+        def __init__(self, triton_client: TritonController, ocr_client: OcrController):
             self.triton_client = triton_client
-            pass
+            self.ocr_client = ocr_client
 
-        def UploadImage(self, request: FileRequest, context: ServicerContext):
-            file_info = FileInfo("dump", request.chunk)
-            img_array_bytes = image2bytes(file_info)
-            triton_grpc_response = self.triton_client.send(img_array_bytes)
+        def Predict(self, request: FileRequest, context: ServicerContext):
+            img_array = ImageUtils.to_nddaray(request.chunk)
+            ocr_response = self.ocr_client.send(pickle.dumps(img_array))
+            triton_grpc_response = self.triton_client.send(pickle.dumps(img_array))
             triton_response = TritonPredictResponse(
                 classification=triton_grpc_response,
-                frame_time="1",
-                latitude="1",
-                longitude="1",
+                frame_time="0",
+                latitude=ocr_response.latitude,
+                longitude=ocr_response.longitude,
             )
             response = ImagePredictResponse(prediction=triton_response)
             return response
 
     class __VideoPredictService(requests_pb2_grpc.VideoPredictServiceServicer):
-        def __init__(self, triton_client: TritonClient):
+        def __init__(self, triton_client: TritonController, ocr_client: OcrController):
             self.triton_client = triton_client
-            pass
+            self.ocr_client = ocr_client
 
-        def UploadVideo(self, request: FileRequest, context: ServicerContext):
+        def Predict(self, request: FileRequest, context: ServicerContext):
             file_info = FileInfo("dump", request.chunk)
-            frames_generator = video2image(file_info, fps=30, step=20)
+            frames_generator = ImageUtils.to_frame(file_info)
             predictions = []
-            for frame_byte, frame_time in frames_generator:
+            for frame_array, frame_time in frames_generator:
+                frame_byte = pickle.dumps(frame_array)
+                ocr_response = self.ocr_client.send(frame_byte)
                 triton_grpc_response = self.triton_client.send(frame_byte)
                 triton_response = TritonPredictResponse(
                     classification=triton_grpc_response,
                     frame_time=str(frame_time),
-                    latitude="1",
-                    longitude="1",
+                    latitude=ocr_response.latitude,
+                    longitude=ocr_response.longitude,
                 )
                 predictions.append(triton_response)
             response = VideoPredictResponse(predictions=predictions)
@@ -70,10 +76,10 @@ class GrpcServer(HttpServer):
         )
 
         requests_pb2_grpc.add_ImagePredictServiceServicer_to_server(
-            self.__ImagePredictService(self.triton_client), server
+            self.__ImagePredictService(self.triton_client, self.ocr_client), server
         )
         requests_pb2_grpc.add_VideoPredictServiceServicer_to_server(
-            self.__VideoPredictService(self.triton_client), server
+            self.__VideoPredictService(self.triton_client, self.ocr_client), server
         )
 
         server.add_insecure_port(f"{host}:{port}")

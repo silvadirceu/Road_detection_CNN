@@ -13,4 +13,6 @@ data:
   COMPUTER_VISION_CONTAINER_HOST: "0.0.0.0"
   COMPUTER_VISION_SERVICE: "road-detection-computer-vision-service"
   TRITON_SERVICE: "triton-server-service"
+  OCR_SERVICE: "road-detection-ocr-service"
+
   TRITON_MODEL_PATH: "/home/joao/workspace/road_detection/Road_detection_CNN/triton/model_repository"

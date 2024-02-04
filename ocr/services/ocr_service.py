@@ -1,26 +1,19 @@
-from dataclasses import dataclass
+from datetime import timedelta, datetime
 from typing import List
 import numpy as np
-from abstractions.ocr import OpticalCharacterRecognition
-from paddle_ocr.paddle_result import PaddleResult
+from abstractions.ocr import Ocr
+from models.inference_result import InferenceResult
 import re
-
-
-@dataclass
-class RoadImageInfo:
-    datetime: "PaddleResult" = PaddleResult()
-    latitude: "PaddleResult" = PaddleResult()
-    longitude: "PaddleResult" = PaddleResult()
-    speed: "PaddleResult" = PaddleResult()
+from models.road_image_info import RoadImageInfo
 
 
 class OcrService:
-    def __init__(self, ocr: OpticalCharacterRecognition):
+    def __init__(self, ocr: Ocr):
         self.__ocr = ocr
         self.__result = RoadImageInfo()
 
     def __datetime_match(self, text: str, prob: float, pos: List[List]):
-        result = None
+        result = InferenceResult()
         pattern = r"(\d{2}-\d{2}-\d{4}) (\d{2})(\d{2})(\d{2})"
         matches = re.search(pattern, text)
         if matches:
@@ -28,49 +21,49 @@ class OcrService:
             hour = matches.group(2)
             minute = matches.group(3)
             second = matches.group(4)
-            result = PaddleResult(
-                {"date": date, "hour": hour, "minute": minute, "second": second},
+            result = InferenceResult(
+                f"{date} {hour}:{minute}:{second}",
                 prob,
                 pos,
             )
         return result
 
     def __latitude_match(self, text: str, prob: float, pos: List[List]):
-        result = None
+        result = InferenceResult()
         pattern = r"^LAT([-]?\d+\.\d+)[-\s+]?([SWNE])$"
         matches = re.search(pattern, text)
 
         if matches:
             value = matches.group(1)
             direction = matches.group(2)
-            result = PaddleResult(
-                {"latitude": value, "direction": direction}, prob, pos
+            result = InferenceResult(
+                f"{value} {direction}", prob, pos
             )
         return result
 
     def __longitude_match(self, text: str, prob: float, pos: List[List]):
-        result = None
+        result = InferenceResult()
         pattern = r"^LON([-]?\d+\.\d+)[-\s+]?([SWNE])$"
         matches = re.search(pattern, text)
         if matches:
             value = matches.group(1)
             direction = matches.group(2)
-            result = PaddleResult(
-                {"longitude": value, "direction": direction}, prob, pos
+            result = InferenceResult(
+                f"{value} {direction}", prob, pos
             )
         return result
 
     def __speed_match(self, text: str, prob: float, pos: List[List]):
-        result = None
+        result = InferenceResult()
         pattern = r"[sS][pP][eE][eE][dD](\d+\.\d+?)Km/h"
         matches = re.search(pattern, text)
         if matches:
             value = matches.group(1)
-            result = PaddleResult({"speed": value}, prob, pos)
+            result = InferenceResult(value, prob, pos)
         return result
 
-    def __predict_upper_right(self, img:np.ndarray):
-        img = img[:int(img.shape[0]*0.25), int(img.shape[1]*0.5):, :]
+    def __predict_upper_right(self, img: np.ndarray):
+        img = img[: int(img.shape[0] * 0.25), int(img.shape[1] * 0.5) :, :]
         pred = self.__ocr.predict(img)
         if pred:
             pred = pred[0]
@@ -79,11 +72,11 @@ class OcrService:
             prob = pred[1][1]
             text = re.sub(":", "", value)
             datetime = self.__datetime_match(text, prob, pos)
-            if datetime:  
+            if datetime:
                 self.__result.datetime = self.__datetime_match(text, prob, pos)
-    
+
     def __predict_bottom_down(self, img: np.ndarray):
-        img = img[int(img.shape[0]*0.25):, int(img.shape[1]*0.5):, :]
+        img = img[int(img.shape[0] * 0.25) :, int(img.shape[1] * 0.5) :, :]
         predictions = self.__ocr.predict(img)
         for pred in predictions:
             if pred:
@@ -92,17 +85,15 @@ class OcrService:
                 prob = pred[1][1]
                 text = re.sub(":", "", value)
                 text = re.sub("YY", "W", text)
-                #print(text)
                 latitude = self.__latitude_match(text, prob, pos)
-                if latitude:
+                if latitude.value:
                     self.__result.latitude = latitude
                 longitude = self.__longitude_match(text, prob, pos)
-                if longitude:
+                if longitude.value:
                     self.__result.longitude = longitude
                 speed = self.__speed_match(text, prob, pos)
-                if speed:
+                if speed.value:
                     self.__result.speed = speed
-
 
     def predict(self, img: np.ndarray):
         self.__predict_upper_right(img)

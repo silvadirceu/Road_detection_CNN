@@ -4,8 +4,8 @@ from proto.grpc_client import GrpcClient
 from dotenv import load_dotenv
 
 load_dotenv()
-COMPUTER_VISION_SERVICE = os.environ.get("COMPUTER_VISION_SERVICE") or "computer-vision"
-COMPUTER_VISION_PORT = os.environ.get("COMPUTER_VISION_PORT") or "80"
+COMPUTER_VISION_SERVICE = os.environ.get("COMPUTER_VISION_SERVICE")
+COMPUTER_VISION_PORT = os.environ.get("COMPUTER_VISION_PORT")
 CAMERA_CONNECTION_STRING = os.environ.get("CAMERA_CONNECTION_STRING")
 
 cv_client = GrpcClient(COMPUTER_VISION_SERVICE, COMPUTER_VISION_PORT)

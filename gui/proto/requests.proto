@@ -1,31 +1,31 @@
 syntax="proto3";
 package requests;
 
-message FileRequest{
+message FileRequest {
     bytes chunk = 1;
 }
 
-message TritonPredictResponse{
+message TritonPredictResponse {
     string classification = 1;
     string frame_time = 2;
     string latitude = 3;
     string longitude = 4;
 }
 
-service TritonPredictService{
-    rpc Predict(FileRequest) returns (TritonPredictResponse);
-}
-
-message VideoPredictResponse{
+message VideoPredictResponse {
     repeated TritonPredictResponse predictions = 1;
 }
 
-service VideoPredictService{
+service TritonPredictService {
+    rpc Predict(FileRequest) returns (TritonPredictResponse);
+}
+
+service VideoPredictService {
     rpc Predict(FileRequest) returns (VideoPredictResponse);
 }
 
 message ImagePredictResponse{
-    TritonPredictResponse predictions = 1;
+    TritonPredictResponse prediction = 1;
 }
 
 service ImagePredictService{

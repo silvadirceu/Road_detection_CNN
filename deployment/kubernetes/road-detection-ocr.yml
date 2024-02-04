@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: road-detection-ocr-deployment
+  namespace: road-detection
+  labels:
+    app: road-detection-ocr-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: road-detection-ocr
+  template:
+    metadata:
+      labels:
+        app: road-detection-ocr
+    spec:
+      containers:
+      - name: road-detection-ocr
+        image: api.innovox.ai/road-detection-ocr:v0.1.0
+        imagePullPolicy: IfNotPresent
+        env:
+        # Define the environment variable
+        - name: OCR_CONTAINER_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: road-detection-config
+              key: OCR_CONTAINER_HOST
+        - name: OCR_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: road-detection-config
+              key: OCR_PORT_PORT
+      imagePullSecrets:
+        - name: innovox-registry
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: road-detection-ocr-service
+  namespace: road-detection
+  labels:
+    app: road-detection-ocr-deployment
+spec:
+  selector:
+    app: road-detection-ocr
+  ports:
+    - name: road-detection-ocr
+      port: 8888
+      targetPort: 80
+  type: ClusterIP

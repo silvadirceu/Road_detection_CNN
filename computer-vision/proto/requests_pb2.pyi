@@ -30,10 +30,10 @@ class VideoPredictResponse(_message.Message):
     def __init__(self, predictions: _Optional[_Iterable[_Union[TritonPredictResponse, _Mapping]]] = ...) -> None: ...
 
 class ImagePredictResponse(_message.Message):
-    __slots__ = ("predictions",)
-    PREDICTIONS_FIELD_NUMBER: _ClassVar[int]
-    predictions: TritonPredictResponse
-    def __init__(self, predictions: _Optional[_Union[TritonPredictResponse, _Mapping]] = ...) -> None: ...
+    __slots__ = ("prediction",)
+    PREDICTION_FIELD_NUMBER: _ClassVar[int]
+    prediction: TritonPredictResponse
+    def __init__(self, prediction: _Optional[_Union[TritonPredictResponse, _Mapping]] = ...) -> None: ...
 
 class ImageDataOCrResponse(_message.Message):
     __slots__ = ("latitude", "longitude", "datetime", "speed")

@@ -2,7 +2,7 @@ from typing import Any, Callable, List
 import streamlit as st
 from abstractions.component import Component
 from engine.utils.file import FileInfo
-from proto.file_upload_pb2 import UploadVideoResponse
+from proto.requests_pb2 import VideoPredictResponse
 from streamlit.runtime.uploaded_file_manager import UploadedFile
 
 
@@ -18,7 +18,7 @@ class UploadFileComponent(Component):
         if uploaded_file:
             self.file_bytes: bytes = uploaded_file.getvalue()
             file_info = FileInfo(uploaded_file.name, self.file_bytes)
-            self.upload_response: UploadVideoResponse = send_file_handler(file_info)
+            self.upload_response: VideoPredictResponse = send_file_handler(file_info)
             self.file_format = file_info.format
 
     def render(self, send_file_handler: Callable[[FileInfo], any]):

@@ -136,4 +136,3 @@ cython_debug/
 flagged
 road_images
 **/ckpt/
-data

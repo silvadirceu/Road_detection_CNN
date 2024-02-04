@@ -1,8 +1,9 @@
 paddlepaddle==2.6.0 -i https://pypi.tuna.tsinghua.edu.cn/simple
 paddleocr==2.6.0.1
-paddlepaddle --upgrade
 PyMuPDF==1.21.1
 numpy<1.24
 grpcio==1.60.0
 grpcio-tools==1.60.0
-googleapis-common-protos
+googleapis-common-protos==1.62.0
+python-dotenv==1.0.0
+dependency-injector==4.41.0

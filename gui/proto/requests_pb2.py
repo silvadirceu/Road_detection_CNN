@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0erequests.proto\x12\x08requests\"\x1c\n\x0b\x46ileRequest\x12\r\n\x05\x63hunk\x18\x01 \x01(\x0c\"h\n\x15TritonPredictResponse\x12\x16\n\x0e\x63lassification\x18\x01 \x01(\t\x12\x12\n\nframe_time\x18\x02 \x01(\t\x12\x10\n\x08latitude\x18\x03 \x01(\t\x12\x11\n\tlongitude\x18\x04 \x01(\t\"L\n\x14VideoPredictResponse\x12\x34\n\x0bpredictions\x18\x01 \x03(\x0b\x32\x1f.requests.TritonPredictResponse\"L\n\x14ImagePredictResponse\x12\x34\n\x0bpredictions\x18\x01 \x01(\x0b\x32\x1f.requests.TritonPredictResponse\"\\\n\x14ImageDataOCrResponse\x12\x10\n\x08latitude\x18\x01 \x01(\t\x12\x11\n\tlongitude\x18\x02 \x01(\t\x12\x10\n\x08\x64\x61tetime\x18\x03 \x01(\t\x12\r\n\x05speed\x18\x04 \x01(\t2Y\n\x14TritonPredictService\x12\x41\n\x07Predict\x12\x15.requests.FileRequest\x1a\x1f.requests.TritonPredictResponse2W\n\x13VideoPredictService\x12@\n\x07Predict\x12\x15.requests.FileRequest\x1a\x1e.requests.VideoPredictResponse2W\n\x13ImagePredictService\x12@\n\x07Predict\x12\x15.requests.FileRequest\x1a\x1e.requests.ImagePredictResponse2W\n\x13ImageDataOcrService\x12@\n\x07Predict\x12\x15.requests.FileRequest\x1a\x1e.requests.ImageDataOCrResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0erequests.proto\x12\x08requests\"\x1c\n\x0b\x46ileRequest\x12\r\n\x05\x63hunk\x18\x01 \x01(\x0c\"h\n\x15TritonPredictResponse\x12\x16\n\x0e\x63lassification\x18\x01 \x01(\t\x12\x12\n\nframe_time\x18\x02 \x01(\t\x12\x10\n\x08latitude\x18\x03 \x01(\t\x12\x11\n\tlongitude\x18\x04 \x01(\t\"L\n\x14VideoPredictResponse\x12\x34\n\x0bpredictions\x18\x01 \x03(\x0b\x32\x1f.requests.TritonPredictResponse\"K\n\x14ImagePredictResponse\x12\x33\n\nprediction\x18\x01 \x01(\x0b\x32\x1f.requests.TritonPredictResponse\"\\\n\x14ImageDataOCrResponse\x12\x10\n\x08latitude\x18\x01 \x01(\t\x12\x11\n\tlongitude\x18\x02 \x01(\t\x12\x10\n\x08\x64\x61tetime\x18\x03 \x01(\t\x12\r\n\x05speed\x18\x04 \x01(\t2Y\n\x14TritonPredictService\x12\x41\n\x07Predict\x12\x15.requests.FileRequest\x1a\x1f.requests.TritonPredictResponse2W\n\x13VideoPredictService\x12@\n\x07Predict\x12\x15.requests.FileRequest\x1a\x1e.requests.VideoPredictResponse2W\n\x13ImagePredictService\x12@\n\x07Predict\x12\x15.requests.FileRequest\x1a\x1e.requests.ImagePredictResponse2W\n\x13ImageDataOcrService\x12@\n\x07Predict\x12\x15.requests.FileRequest\x1a\x1e.requests.ImageDataOCrResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -28,15 +28,15 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _globals['_VIDEOPREDICTRESPONSE']._serialized_start=164
   _globals['_VIDEOPREDICTRESPONSE']._serialized_end=240
   _globals['_IMAGEPREDICTRESPONSE']._serialized_start=242
-  _globals['_IMAGEPREDICTRESPONSE']._serialized_end=318
-  _globals['_IMAGEDATAOCRRESPONSE']._serialized_start=320
-  _globals['_IMAGEDATAOCRRESPONSE']._serialized_end=412
-  _globals['_TRITONPREDICTSERVICE']._serialized_start=414
-  _globals['_TRITONPREDICTSERVICE']._serialized_end=503
-  _globals['_VIDEOPREDICTSERVICE']._serialized_start=505
-  _globals['_VIDEOPREDICTSERVICE']._serialized_end=592
-  _globals['_IMAGEPREDICTSERVICE']._serialized_start=594
-  _globals['_IMAGEPREDICTSERVICE']._serialized_end=681
-  _globals['_IMAGEDATAOCRSERVICE']._serialized_start=683
-  _globals['_IMAGEDATAOCRSERVICE']._serialized_end=770
+  _globals['_IMAGEPREDICTRESPONSE']._serialized_end=317
+  _globals['_IMAGEDATAOCRRESPONSE']._serialized_start=319
+  _globals['_IMAGEDATAOCRRESPONSE']._serialized_end=411
+  _globals['_TRITONPREDICTSERVICE']._serialized_start=413
+  _globals['_TRITONPREDICTSERVICE']._serialized_end=502
+  _globals['_VIDEOPREDICTSERVICE']._serialized_start=504
+  _globals['_VIDEOPREDICTSERVICE']._serialized_end=591
+  _globals['_IMAGEPREDICTSERVICE']._serialized_start=593
+  _globals['_IMAGEPREDICTSERVICE']._serialized_end=680
+  _globals['_IMAGEDATAOCRSERVICE']._serialized_start=682
+  _globals['_IMAGEDATAOCRSERVICE']._serialized_end=769
 # @@protoc_insertion_point(module_scope)

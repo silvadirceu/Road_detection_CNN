@@ -8,7 +8,6 @@ from proto import requests_pb2_grpc
 from proto.requests_pb2 import ImageDataOCrResponse, FileRequest
 import pickle
 
-
 MAX_MESSAGE_LENGTH = 200 * 1024 * 1024
 
 
@@ -16,24 +15,20 @@ class GrpcServer(HttpServer):
     def __init__(self, ocr_service: OcrService):
         self.__ocr_service = ocr_service
 
-    class __ImageDataService(requests_pb2_grpc.ImageDataOcrServiceServicer):
+    class __ImageDataOcrService(requests_pb2_grpc.ImageDataOcrServiceServicer):
         def __init__(self, ocr_service: OcrService):
             self.__ocr_service = ocr_service
-            pass
 
         def Predict(self, request: FileRequest, context: ServicerContext):
             pred = self.__ocr_service.predict(pickle.loads(request.chunk))
-            date = pred.datetime.value["date"]
-            hour = pred.datetime.value["hour"]
-            min = pred.datetime.value["minute"]
-            sec = pred.datetime.value["second"]
-
             response = ImageDataOCrResponse(
-                latitude=pred.latitude.value["latitude"],
-                longitude=pred.longitude.value["longitude"],
-                datetime=f"{date} {hour}:{min}:{sec}",
-                speed=pred.speed.value["speed"],
+                latitude=pred.latitude.value,
+                longitude=pred.longitude.value,
+                datetime=pred.datetime.value,
+                speed=pred.speed.value,
             )
+            
+            print(response)
             return response
 
     def run(self, host="localhost", port="50051", max_workers=10):
@@ -46,7 +41,7 @@ class GrpcServer(HttpServer):
         )
 
         requests_pb2_grpc.add_ImageDataOcrServiceServicer_to_server(
-            self.__ImageDataService(self.__ocr_service), server
+            self.__ImageDataOcrService(self.__ocr_service), server
         )
 
         server.add_insecure_port(f"{host}:{port}")
