@@ -1,11 +1,13 @@
 import folium
 import streamlit as st
-from components.report_features_checkbox import ReportFeatureCheckbox
 from streamlit_folium import st_folium
+from services.celeryconfig import celery_app
+from components.report_features_checkbox import ReportFeatureCheckbox
 from components import components as st_components
 from services.services import geolocator, send_file_controller
 from PIL import Image
 
+from services.settings import *
 
 potholes_locations = [
     [-7.56074, -35.01794],
@@ -16,9 +18,12 @@ potholes_locations = [
 dirty_locations = [[-7.56054, -35.01828], [-7.56050, -35.01837], [-7.56044, -35.01846]]
 all_locations = potholes_locations + dirty_locations
 
-
 def main():
-    st.set_page_config(layout="wide")
+    st.set_page_config(
+        page_title="Road Condition",
+        page_icon="",
+        layout="wide",
+    )
     st_components.styles()
     st.title("Road Condition")
     with st.sidebar:
@@ -30,7 +35,6 @@ def main():
         upload_response, file_bytes, file_format = st_components.upload_file(
             send_file_controller.send
         )
-        st.divider()
 
         st.header("Data Analysis")
         report_features = st_components.report_features(

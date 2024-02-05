@@ -1,8 +1,8 @@
+import os
 import base64
 import json
 import numpy as np
 from engine.utils.bmsgpack import msgpack_to_obj, obj_to_msgpack
-
 
 def ndarray_to_bytes(array: np.ndarray) -> bytes:
     return obj_to_msgpack(array)

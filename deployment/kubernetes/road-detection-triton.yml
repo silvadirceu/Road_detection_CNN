@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: triton-server
+  name: triton-server-deployment
   namespace: road-detection
   labels:
     app: triton-server

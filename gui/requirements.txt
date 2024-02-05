@@ -7,3 +7,4 @@ msgpack==1.0.7
 msgpack_numpy==0.4.8
 streamlit_folium
 geopy
+celery
