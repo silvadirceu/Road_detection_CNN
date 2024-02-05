@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import requests_pb2 as requests__pb2
+import proto.requests_pb2 as requests__pb2
 
 
 class TritonPredictServiceStub(object):

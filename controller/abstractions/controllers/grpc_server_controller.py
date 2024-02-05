@@ -1,7 +1,7 @@
 import abc
 
 
-class HttpServer(abc.ABC):
+class GrpcServerController(abc.ABC):
     @abc.abstractclassmethod
     def run():
         pass

@@ -1,7 +1,7 @@
 from concurrent import futures
 import grpc
 from grpc import ServicerContext
-from abstractions.http_server import HttpServer
+from abstractions.controllers.grpc_server_controller import GrpcServerController, HttpServer
 from proto import requests_pb2_grpc
 from proto.requests_pb2 import FileRequest, RoadVideoDataResponse
 import pickle
@@ -9,7 +9,7 @@ import pickle
 MAX_MESSAGE_LENGTH = 200 * 1024 * 1024
 
 
-class ApiController(HttpServer):
+class ApiController(GrpcServerController):
     def __init__(self):
         pass
 
