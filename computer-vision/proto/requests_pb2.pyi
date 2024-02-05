@@ -5,7 +5,7 @@ from typing import ClassVar as _ClassVar, Iterable as _Iterable, Mapping as _Map
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
-class TritonPredictRequest(_message.Message):
+class FileRequest(_message.Message):
     __slots__ = ("chunk",)
     CHUNK_FIELD_NUMBER: _ClassVar[int]
     chunk: bytes
@@ -23,26 +23,26 @@ class TritonPredictResponse(_message.Message):
     longitude: str
     def __init__(self, classification: _Optional[str] = ..., frame_time: _Optional[str] = ..., latitude: _Optional[str] = ..., longitude: _Optional[str] = ...) -> None: ...
 
-class UploadVideoRequest(_message.Message):
-    __slots__ = ("chunk",)
-    CHUNK_FIELD_NUMBER: _ClassVar[int]
-    chunk: bytes
-    def __init__(self, chunk: _Optional[bytes] = ...) -> None: ...
-
-class UploadVideoResponse(_message.Message):
+class VideoPredictResponse(_message.Message):
     __slots__ = ("predictions",)
     PREDICTIONS_FIELD_NUMBER: _ClassVar[int]
     predictions: _containers.RepeatedCompositeFieldContainer[TritonPredictResponse]
     def __init__(self, predictions: _Optional[_Iterable[_Union[TritonPredictResponse, _Mapping]]] = ...) -> None: ...
 
-class UploadImageRequest(_message.Message):
-    __slots__ = ("chunk",)
-    CHUNK_FIELD_NUMBER: _ClassVar[int]
-    chunk: bytes
-    def __init__(self, chunk: _Optional[bytes] = ...) -> None: ...
-
-class UploadImageResponse(_message.Message):
+class ImagePredictResponse(_message.Message):
     __slots__ = ("prediction",)
     PREDICTION_FIELD_NUMBER: _ClassVar[int]
     prediction: TritonPredictResponse
     def __init__(self, prediction: _Optional[_Union[TritonPredictResponse, _Mapping]] = ...) -> None: ...
+
+class ImageDataOCrResponse(_message.Message):
+    __slots__ = ("latitude", "longitude", "datetime", "speed")
+    LATITUDE_FIELD_NUMBER: _ClassVar[int]
+    LONGITUDE_FIELD_NUMBER: _ClassVar[int]
+    DATETIME_FIELD_NUMBER: _ClassVar[int]
+    SPEED_FIELD_NUMBER: _ClassVar[int]
+    latitude: str
+    longitude: str
+    datetime: str
+    speed: str
+    def __init__(self, latitude: _Optional[str] = ..., longitude: _Optional[str] = ..., datetime: _Optional[str] = ..., speed: _Optional[str] = ...) -> None: ...

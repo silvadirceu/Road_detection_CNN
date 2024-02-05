@@ -3,7 +3,7 @@ version: '3'
 services:
   gui:
     image: road-detection-gui:${VERSION}
-    container_name: gui
+    container_name: ${GUI_SERVICE}
     build:
       context: ./gui
     ports:
@@ -32,7 +32,19 @@ services:
   #     - "8181:8181"
   #   networks:
   #    - road_detection_network
-
+  
+  ocr:
+    image: road-detection-ocr:${VERSION}
+    container_name: ${OCR_SERVICE}
+    build:
+      context: ./ocr
+    ports:
+      - ${OCR_PORT}:80
+    env_file:
+      - .env
+    networks:
+      - road_detection_network
+        
   triton-server:
     image: nvcr.io/nvidia/tritonserver:23.12-py3
     container_name: ${TRITON_SERVICE}

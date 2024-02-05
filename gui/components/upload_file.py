@@ -2,7 +2,7 @@ import os
 from typing import Any, Callable, List
 import streamlit as st
 from abstractions.component import Component
-from proto.file_upload_pb2 import UploadVideoResponse
+from proto.requests_pb2 import VideoPredictResponse
 from streamlit.runtime.uploaded_file_manager import UploadedFile
 from controllers.tasks_controller import process_task
 from engine.utils.schemas import FileInfo
@@ -25,7 +25,7 @@ class UploadFileComponent(Component):
             )
             
             #cant serialize method send_file_handler()
-            self.upload_response: UploadVideoResponse = (
+            self.upload_response: VideoPredictResponse = (
                 process_task.delay(file_info.to_dict())
             )
 
