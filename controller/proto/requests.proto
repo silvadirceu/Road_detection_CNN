@@ -1,0 +1,91 @@
+syntax="proto3";
+package requests;
+
+message FileRequest{
+    bytes chunk = 1;
+}
+
+message TritonPredictResponse{
+    string classification = 1;
+    string frame_time = 2;
+    string latitude = 3;
+    string longitude = 4;
+}
+
+service TritonPredictService{
+    rpc Predict(FileRequest) returns (TritonPredictResponse);
+}
+
+message VideoPredictResponse{
+    repeated TritonPredictResponse predictions = 1;
+}
+
+service VideoPredictService{
+    rpc Predict(FileRequest) returns (VideoPredictResponse);
+}
+
+message ImagePredictResponse{
+    TritonPredictResponse predictions = 1;
+}
+
+service ImagePredictService{
+    rpc Predict(FileRequest) returns (ImagePredictResponse);
+}
+
+message ImageDataOCrResponse{
+    string latitude = 1;
+    string longitude = 2;
+    string datetime = 3;
+    string speed = 4;
+}
+
+service ImageDataOcrService{
+    rpc Predict(FileRequest) returns (ImageDataOCrResponse);
+}
+
+message GpsCoordinates{
+    string latitude = 1;
+    string longitude = 2;
+}
+
+message GeoLocation{
+    string latitude = 1;
+    string longitude = 2;
+    string street = 3;
+}
+
+message PotholeRoadAttr{
+    string latitude = 1;
+    string longitude = 2;
+    string area = 3;
+    string depth = 4;
+}
+
+message RoadAttr{
+    repeated PotholeRoadAttr potholes = 1;
+    repeated GpsCoordinates curb = 2;
+    repeated GpsCoordinates crack = 3;
+    repeated GpsCoordinates dirty = 4;
+    repeated GpsCoordinates traffic_signs = 5;
+}
+
+message RoadFrameDataResponse{
+    int32 id = 1;
+    string video_id = 2;
+    float video_time = 3;
+    string datetime = 4;
+    float speed = 5;
+    GeoLocation geoposition = 6;
+    RoadAttr attributes = 7;
+    string image = 8;
+}
+
+message RoadVideoDataResponse{
+    string id = 1;
+    repeated RoadFrameDataResponse frames_data = 2;
+}
+
+service RoadVideoDataService{
+    rpc GetVideoData(FileRequest) returns (RoadVideoDataResponse);
+}
+
