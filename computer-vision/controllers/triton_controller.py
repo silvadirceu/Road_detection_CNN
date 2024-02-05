@@ -11,7 +11,7 @@ class TritonController(HttpClient):
     def __init__(self, host="localhost", port="50051"):
         self.host = host
         self.server_port = port
-        self.__triton_client = InferenceServerClient(url=f"{host}:{port}")
+        self.__inference_client = InferenceServerClient(url=f"{host}:{port}")
 
     def send(self, chunk: bytes):
         img_array = pickle.loads(chunk)
@@ -21,7 +21,7 @@ class TritonController(HttpClient):
         inputs = InferInput("conv2d_input", img_resized.shape, datatype="FP32")
         inputs.set_data_from_numpy(img_resized)
         output = InferRequestedOutput("dense_1", class_count=3)
-        response = self.__triton_client.infer(
+        response = self.__inference_client.infer(
             model_name="road_detection_cnn", inputs=[inputs], outputs=[output]
         )
         result = response.as_numpy("dense_1")

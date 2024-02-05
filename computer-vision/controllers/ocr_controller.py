@@ -1,6 +1,5 @@
 import grpc
 from abstractions.http_client import HttpClient
-from tritonclient.grpc import InferenceServerClient, InferInput, InferRequestedOutput
 from proto import requests_pb2
 from proto import requests_pb2_grpc
 

@@ -1,12 +1,10 @@
 from concurrent import futures
-from io import BytesIO
 import pickle
 import grpc
 from grpc import ServicerContext
 from abstractions.http_client import HttpClient
 from abstractions.http_server import HttpServer
 from proto import requests_pb2_grpc
-from controllers.ocr_controller import OcrController
 from proto.requests_pb2 import (
     TritonPredictResponse,
     FileRequest,
@@ -14,19 +12,18 @@ from proto.requests_pb2 import (
     VideoPredictResponse,
 )
 from controllers.triton_controller import TritonController
-from utils.file import FileInfo, video2image
-from utils.image import Image, ImageUtils
+from utils.media_utils import ImageUtils, VideoUtils
 
 MAX_MESSAGE_LENGTH = 200 * 1024 * 1024
 
 
 class ApiController(HttpServer):
-    def __init__(self, triton_controller: HttpClient, ocr_controller: OcrController):
+    def __init__(self, triton_controller: HttpClient, ocr_controller: HttpClient):
         self.triton_client = triton_controller
         self.ocr_client = ocr_controller
 
     class __ImagePredictService(requests_pb2_grpc.ImagePredictServiceServicer):
-        def __init__(self, triton_client: TritonController, ocr_client: OcrController):
+        def __init__(self, triton_client: HttpClient, ocr_client: HttpClient):
             self.triton_client = triton_client
             self.ocr_client = ocr_client
 
@@ -44,13 +41,12 @@ class ApiController(HttpServer):
             return response
 
     class __VideoPredictService(requests_pb2_grpc.VideoPredictServiceServicer):
-        def __init__(self, triton_client: TritonController, ocr_client: OcrController):
+        def __init__(self, triton_client: HttpClient, ocr_client: HttpClient):
             self.triton_client = triton_client
             self.ocr_client = ocr_client
 
         def Predict(self, request: FileRequest, context: ServicerContext):
-            file_info = FileInfo("dump", request.chunk)
-            frames_generator = ImageUtils.to_frame(file_info)
+            frames_generator = VideoUtils.to_frames(request.chunk)
             predictions = []
             for frame_array, frame_time in frames_generator:
                 frame_byte = pickle.dumps(frame_array)

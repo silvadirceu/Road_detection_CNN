@@ -1,11 +1,11 @@
 from abstractions.http_server import HttpServer
 from dependency_injector.wiring import Provide, inject
-from services.container import Container
+from containers.container import Container
 
 
 @inject
-def main(service: HttpServer = Provide[Container.grpc_server]) -> None:
-    service.run(Container.config.ocr_host(), Container.config.ocr_port())
+def main(server: HttpServer = Provide[Container.server]) -> None:
+    server.run(Container.config.ocr_host(), Container.config.ocr_port())
 
 
 if __name__ == "__main__":

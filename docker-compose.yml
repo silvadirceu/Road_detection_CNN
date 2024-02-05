@@ -3,7 +3,7 @@ version: '3'
 services:
   gui:
     image: road-detection-gui:${VERSION}
-    container_name: gui
+    container_name: ${GUI_SERVICE}
     build:
       context: ./gui
     ports:
@@ -47,7 +47,7 @@ services:
         
   triton-server:
     image: nvcr.io/nvidia/tritonserver:23.12-py3
-    container_name: triton-service
+    container_name: ${TRITON_SERVICE}
     volumes:
       - ${TRITON_MODEL_PATH}:/models
     ports:

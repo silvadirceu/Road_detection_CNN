@@ -1,15 +1,14 @@
 from datetime import timedelta, datetime
 from typing import List
 import numpy as np
-from abstractions.ocr import Ocr
 from models.inference_result import InferenceResult
 import re
 from models.road_image_info import RoadImageInfo
-
+from services.paddle_service import PaddleService
 
 class OcrService:
-    def __init__(self, ocr: Ocr):
-        self.__ocr = ocr
+    def __init__(self, paddle_service: PaddleService):
+        self.__ocr = paddle_service
         self.__result = RoadImageInfo()
 
     def __datetime_match(self, text: str, prob: float, pos: List[List]):

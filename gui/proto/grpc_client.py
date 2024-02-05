@@ -34,7 +34,7 @@ class GrpcClient(HttpHandler):
             response: requests_pb2.ImagePredictResponse = self.stub_image.Predict(message)
             print(response)
         except grpc.RpcError as e:
-            print(f"Received unknown RPC error: code={e.code()} message={e.details()}")
+            print(f"gRPC error: code={e.code()} message={e.details()}")
         return response
 
     def __send_video(self, chunk: bytes):

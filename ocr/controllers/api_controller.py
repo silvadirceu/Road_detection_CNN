@@ -11,9 +11,9 @@ import pickle
 MAX_MESSAGE_LENGTH = 200 * 1024 * 1024
 
 
-class GrpcServer(HttpServer):
+class ApiController(HttpServer):
     def __init__(self, ocr_service: OcrService):
-        self.__ocr_service = ocr_service
+        self.__ocr_controller = ocr_service
 
     class __ImageDataOcrService(requests_pb2_grpc.ImageDataOcrServiceServicer):
         def __init__(self, ocr_service: OcrService):
@@ -28,7 +28,6 @@ class GrpcServer(HttpServer):
                 speed=pred.speed.value,
             )
             
-            print(response)
             return response
 
     def run(self, host="localhost", port="50051", max_workers=10):
@@ -41,7 +40,7 @@ class GrpcServer(HttpServer):
         )
 
         requests_pb2_grpc.add_ImageDataOcrServiceServicer_to_server(
-            self.__ImageDataOcrService(self.__ocr_service), server
+            self.__ImageDataOcrService(self.__ocr_controller), server
         )
 
         server.add_insecure_port(f"{host}:{port}")

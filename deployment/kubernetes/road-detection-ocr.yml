@@ -30,7 +30,7 @@ spec:
           valueFrom:
             configMapKeyRef:
               name: road-detection-config
-              key: OCR_PORT_PORT
+              key: OCR_PORT
       imagePullSecrets:
         - name: innovox-registry
 ---
